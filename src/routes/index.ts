@@ -1,12 +1,13 @@
 import { Router } from 'express'
 import { openAiClient } from '../openAiClient.js'
+import { MODELS } from '../settings/ai.settings.js'
 
 const router = Router()
 
 router.get('/', async (_req, res) => {
   try {
     const response = await openAiClient.responses.create({
-      model: 'gpt-4.1-mini',
+      model: MODELS.GPT_4_1_MINI,
       input: 'Say hello in one short sentence',
     })
 
