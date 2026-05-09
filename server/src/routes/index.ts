@@ -1,6 +1,5 @@
 import { Router } from 'express'
-import { makeRequest, openAiClient } from '../openAiClient.js'
-import { MODELS } from '../settings/ai.settings.js'
+import { makeRequest } from '../openAiClient.js'
 
 const router = Router()
 

@@ -14,8 +14,11 @@
       "type": "node",
       "request": "launch",
       "cwd": "${workspaceFolder}/frontend",
-      "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "dev"],
+      "runtimeExecutable": "/bin/zsh",
+      "runtimeArgs": [
+        "-lc",
+        "source ~/.nvm/nvm.sh && nvm use 22.16.0 && npm run dev"
+      ],
       "console": "integratedTerminal"
     }
   ]

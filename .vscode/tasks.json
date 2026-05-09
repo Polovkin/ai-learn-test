@@ -1,0 +1,31 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "npm run dev",
+      "type": "shell",
+      "command": "source ~/.nvm/nvm.sh && nvm use 22.16.0 && npm run dev",
+      "options": {
+        "cwd": "${workspaceFolder}/frontend",
+        "shell": {
+          "executable": "/bin/zsh",
+          "args": ["-lc"]
+        }
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "npm run build",
+      "type": "shell",
+      "command": "source ~/.nvm/nvm.sh && nvm use 22.16.0 && npm run build",
+      "options": {
+        "cwd": "${workspaceFolder}/frontend",
+        "shell": {
+          "executable": "/bin/zsh",
+          "args": ["-lc"]
+        }
+      },
+      "problemMatcher": []
+    }
+  ]
+}
