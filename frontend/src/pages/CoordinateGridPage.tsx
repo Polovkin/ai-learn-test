@@ -23,6 +23,8 @@ type VectorPair = {
   key: string
   a: Point
   b: Point
+  pairLabel: string
+  vectorsLabel: string
   distance: number
   dotProduct: number
   cosine: number | null
@@ -43,12 +45,21 @@ type VectorTooltipProps = {
   payload?: TooltipPayload[]
 }
 
+type SortKey = 'pair' | 'vectors' | 'distance' | 'dotProduct' | 'cosine'
+type SortDirection = 'asc' | 'desc'
+
+type SortState = {
+  key: SortKey
+  direction: SortDirection
+}
+
 const pointColors = ['#2563eb', '#dc2626', '#0f766e', '#9333ea', '#ea580c', '#0891b2']
+const COORDINATE_LIMIT = 100
 
 const defaultPoints: Point[] = [
-  { id: 'A', x: 2, y: 3 },
-  { id: 'B', x: 6, y: 1 },
-  { id: 'C', x: -3, y: 4 },
+  { id: 'A', x: 20, y: 30 },
+  { id: 'B', x: 60, y: 10 },
+  { id: 'C', x: -30, y: 40 },
 ]
 
 const formatCoordinate = (value: number) => value.toString()
@@ -69,6 +80,24 @@ const getCosineSimilarity = (a: Point, b: Point) => {
   }
 
   return getDotProduct(a, b) / (aLength * bLength)
+}
+
+const compareText = (a: string, b: string) => a.localeCompare(b, 'uk')
+
+const compareNullableNumbers = (a: number | null, b: number | null) => {
+  if (a === null && b === null) {
+    return 0
+  }
+
+  if (a === null) {
+    return 1
+  }
+
+  if (b === null) {
+    return -1
+  }
+
+  return a - b
 }
 
 const hasCoordinateCollision = (
@@ -115,6 +144,10 @@ function CoordinateGridPage() {
   const [editName, setEditName] = useState('')
   const [editXValue, setEditXValue] = useState('')
   const [editYValue, setEditYValue] = useState('')
+  const [sort, setSort] = useState<SortState>({
+    key: 'pair',
+    direction: 'asc',
+  })
 
   const chartPoints = useMemo<ChartPoint[]>(
     () =>
@@ -139,6 +172,10 @@ function CoordinateGridPage() {
           key: `${i}-${j}`,
           a,
           b,
+          pairLabel: `${a.id} ↔ ${b.id}`,
+          vectorsLabel: `[${formatCoordinate(a.x)}, ${formatCoordinate(a.y)}] ↔ [${formatCoordinate(
+            b.x,
+          )}, ${formatCoordinate(b.y)}]`,
           distance: getDistance(a, b),
           dotProduct: getDotProduct(a, b),
           cosine: getCosineSimilarity(a, b),
@@ -148,6 +185,52 @@ function CoordinateGridPage() {
 
     return pairs
   }, [points])
+
+  const sortedVectorPairs = useMemo(() => {
+    const sortedPairs = [...vectorPairs].sort((a, b) => {
+      let result = 0
+
+      if (sort.key === 'pair') {
+        result = compareText(a.pairLabel, b.pairLabel)
+      }
+
+      if (sort.key === 'vectors') {
+        result = compareText(a.vectorsLabel, b.vectorsLabel)
+      }
+
+      if (sort.key === 'distance') {
+        result = a.distance - b.distance
+      }
+
+      if (sort.key === 'dotProduct') {
+        result = a.dotProduct - b.dotProduct
+      }
+
+      if (sort.key === 'cosine') {
+        result = compareNullableNumbers(a.cosine, b.cosine)
+      }
+
+      return sort.direction === 'asc' ? result : -result
+    })
+
+    return sortedPairs
+  }, [sort.direction, sort.key, vectorPairs])
+
+  const changeSort = (key: SortKey) => {
+    setSort((currentSort) => ({
+      key,
+      direction:
+        currentSort.key === key && currentSort.direction === 'asc' ? 'desc' : 'asc',
+    }))
+  }
+
+  const getSortLabel = (key: SortKey) => {
+    if (sort.key !== key) {
+      return '↕'
+    }
+
+    return sort.direction === 'asc' ? '↑' : '↓'
+  }
 
   const addPoint = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -166,8 +249,13 @@ function CoordinateGridPage() {
       return
     }
 
-    if (nextX < -10 || nextX > 10 || nextY < -10 || nextY > 10) {
-      setFormError('Координати мають бути в діапазоні від -10 до 10.')
+    if (
+      nextX < -COORDINATE_LIMIT ||
+      nextX > COORDINATE_LIMIT ||
+      nextY < -COORDINATE_LIMIT ||
+      nextY > COORDINATE_LIMIT
+    ) {
+      setFormError('Координати мають бути в діапазоні від -100 до 100.')
       return
     }
 
@@ -223,8 +311,13 @@ function CoordinateGridPage() {
       return
     }
 
-    if (nextX < -10 || nextX > 10 || nextY < -10 || nextY > 10) {
-      setFormError('Координати мають бути в діапазоні від -10 до 10.')
+    if (
+      nextX < -COORDINATE_LIMIT ||
+      nextX > COORDINATE_LIMIT ||
+      nextY < -COORDINATE_LIMIT ||
+      nextY > COORDINATE_LIMIT
+    ) {
+      setFormError('Координати мають бути в діапазоні від -100 до 100.')
       return
     }
 
@@ -271,14 +364,14 @@ function CoordinateGridPage() {
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis
                   dataKey="x"
-                  domain={[-10, 10]}
+                  domain={[-COORDINATE_LIMIT, COORDINATE_LIMIT]}
                   name="x"
                   tickCount={11}
                   type="number"
                 />
                 <YAxis
                   dataKey="y"
-                  domain={[-10, 10]}
+                  domain={[-COORDINATE_LIMIT, COORDINATE_LIMIT]}
                   name="y"
                   tickCount={11}
                   type="number"
@@ -335,8 +428,8 @@ function CoordinateGridPage() {
           <label>
             X
             <input
-              max="10"
-              min="-10"
+              max={COORDINATE_LIMIT}
+              min={-COORDINATE_LIMIT}
               step="1"
               type="number"
               value={xValue}
@@ -347,8 +440,8 @@ function CoordinateGridPage() {
           <label>
             Y
             <input
-              max="10"
-              min="-10"
+              max={COORDINATE_LIMIT}
+              min={-COORDINATE_LIMIT}
               step="1"
               type="number"
               value={yValue}
@@ -386,8 +479,8 @@ function CoordinateGridPage() {
                     <label>
                       X
                       <input
-                        max="10"
-                        min="-10"
+                        max={COORDINATE_LIMIT}
+                        min={-COORDINATE_LIMIT}
                         step="1"
                         type="number"
                         value={editXValue}
@@ -397,8 +490,8 @@ function CoordinateGridPage() {
                     <label>
                       Y
                       <input
-                        max="10"
-                        min="-10"
+                        max={COORDINATE_LIMIT}
+                        min={-COORDINATE_LIMIT}
                         step="1"
                         type="number"
                         value={editYValue}
@@ -439,27 +532,42 @@ function CoordinateGridPage() {
             <table className="comparison-table">
               <thead>
                 <tr>
-                  <th>Пара</th>
-                  <th>vectors</th>
-                  <th>distance</th>
-                  <th>dot product</th>
-                  <th>cosine similarity</th>
+                  <th>
+                    <button type="button" onClick={() => changeSort('pair')}>
+                      Пара <span>{getSortLabel('pair')}</span>
+                    </button>
+                  </th>
+                  <th>
+                    <button type="button" onClick={() => changeSort('vectors')}>
+                      vectors <span>{getSortLabel('vectors')}</span>
+                    </button>
+                  </th>
+                  <th>
+                    <button type="button" onClick={() => changeSort('distance')}>
+                      distance <span>{getSortLabel('distance')}</span>
+                    </button>
+                  </th>
+                  <th>
+                    <button type="button" onClick={() => changeSort('dotProduct')}>
+                      dot product <span>{getSortLabel('dotProduct')}</span>
+                    </button>
+                  </th>
+                  <th>
+                    <button type="button" onClick={() => changeSort('cosine')}>
+                      cosine similarity <span>{getSortLabel('cosine')}</span>
+                    </button>
+                  </th>
                 </tr>
               </thead>
               <tbody>
-                {vectorPairs.length > 0 ? (
-                  vectorPairs.map((pair) => (
+                {sortedVectorPairs.length > 0 ? (
+                  sortedVectorPairs.map((pair) => (
                     <tr key={pair.key}>
-                    <td>
-                      {pair.a.id} ↔ {pair.b.id}
-                    </td>
-                    <td>
-                      [{formatCoordinate(pair.a.x)}, {formatCoordinate(pair.a.y)}] ↔ [
-                      {formatCoordinate(pair.b.x)}, {formatCoordinate(pair.b.y)}]
-                    </td>
-                    <td>{pair.distance.toFixed(3)}</td>
-                    <td>{pair.dotProduct.toFixed(3)}</td>
-                    <td>{pair.cosine === null ? 'n/a' : pair.cosine.toFixed(3)}</td>
+                      <td>{pair.pairLabel}</td>
+                      <td>{pair.vectorsLabel}</td>
+                      <td>{pair.distance.toFixed(3)}</td>
+                      <td>{pair.dotProduct.toFixed(3)}</td>
+                      <td>{pair.cosine === null ? 'n/a' : pair.cosine.toFixed(3)}</td>
                     </tr>
                   ))
                 ) : (

@@ -432,13 +432,13 @@
 
 .point-list {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: 12px;
 }
 
 .point-item {
   display: grid;
-  grid-template-columns: 12px auto 1fr auto;
+  grid-template-columns: 12px auto 1fr;
   gap: 10px;
   align-items: center;
   border: 1px solid var(--border);
@@ -456,6 +456,11 @@
   grid-column: 2 / -1;
   color: var(--text);
   font: 13px/1.2 var(--mono);
+}
+
+.point-item > button {
+  grid-column: 2 / -1;
+  justify-self: start;
 }
 
 .point-item button,
@@ -477,8 +482,9 @@
 }
 
 .point-item-editing {
-  grid-template-columns: 12px minmax(120px, 1fr) repeat(2, minmax(90px, 120px)) auto;
-  align-items: end;
+  grid-template-columns: 12px 1fr;
+  align-items: start;
+  row-gap: 12px;
 }
 
 .point-item-editing label {
@@ -487,6 +493,11 @@
   color: var(--text-h);
   font-size: 13px;
   font-weight: 650;
+}
+
+.point-item-editing label,
+.point-actions {
+  grid-column: 2;
 }
 
 .point-item-editing input {
@@ -510,7 +521,9 @@
 
 .point-actions {
   display: flex;
+  flex-wrap: wrap;
   gap: 8px;
+  margin-top: 2px;
 }
 
 .point-actions button:first-child {
@@ -554,6 +567,33 @@
   color: var(--text-h);
   background: var(--code-bg);
   font: 700 13px/1.2 var(--mono);
+}
+
+.comparison-table th button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 0;
+  padding: 0;
+  color: inherit;
+  background: transparent;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.comparison-table th button:hover {
+  color: var(--accent);
+}
+
+.comparison-table th button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.comparison-table th span {
+  min-width: 14px;
+  color: var(--accent);
 }
 
 .comparison-table td {
@@ -601,15 +641,11 @@
   }
 
   .point-item code,
-  .point-item button,
+  .point-item > button,
   .point-length,
   .point-item-editing label,
   .point-actions {
     grid-column: 2;
-  }
-
-  .point-actions {
-    flex-wrap: wrap;
   }
 
   .flow {
