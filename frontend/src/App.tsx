@@ -1,15 +1,19 @@
 import { useEffect, useState } from 'react'
 import './App.css'
 import CoordinateGridPage from './pages/CoordinateGridPage'
+import PromptAssemblyPage from './pages/PromptAssemblyPage'
 import TokenizationPage from './pages/TokenizationPage'
 
 const routes = {
   tokenization: '#/tokenization',
   coordinateGrid: '#/coordinate-grid',
+  promptAssembly: '#/prompt-assembly',
 } as const
 
 const getCurrentRoute = () =>
-  window.location.hash === routes.coordinateGrid ? routes.coordinateGrid : routes.tokenization
+  Object.values(routes).includes(window.location.hash as (typeof routes)[keyof typeof routes])
+    ? window.location.hash
+    : routes.tokenization
 
 function App() {
   const [currentRoute, setCurrentRoute] = useState(getCurrentRoute)
@@ -42,9 +46,17 @@ function App() {
         >
           Координатна сітка
         </a>
+        <a
+          className={currentRoute === routes.promptAssembly ? 'active' : undefined}
+          href={routes.promptAssembly}
+        >
+          Prompt Assembly
+        </a>
       </nav>
 
-      {currentRoute === routes.coordinateGrid ? <CoordinateGridPage /> : <TokenizationPage />}
+      {currentRoute === routes.coordinateGrid && <CoordinateGridPage />}
+      {currentRoute === routes.promptAssembly && <PromptAssemblyPage />}
+      {currentRoute === routes.tokenization && <TokenizationPage />}
     </>
   )
 }

@@ -110,11 +110,25 @@
   font: inherit;
 }
 
+.tokenizer-form textarea {
+  min-width: 0;
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 13px 14px;
+  box-sizing: border-box;
+  color: var(--text-h);
+  background: var(--bg);
+  font: inherit;
+  resize: vertical;
+}
+
 .tokenizer-form input + label {
   margin-top: 8px;
 }
 
 .tokenizer-form input:focus-visible,
+.tokenizer-form textarea:focus-visible,
 .tokenizer-form button:focus-visible,
 .vector-output:focus-visible {
   outline: 2px solid var(--accent);
@@ -182,6 +196,76 @@
   top: 50%;
   translate: 50% -50%;
   color: var(--accent);
+}
+
+.prompt-panel {
+  width: min(1060px, 100%);
+}
+
+.prompt-input {
+  min-height: 150px;
+}
+
+.prompt-flow {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-top: 28px;
+}
+
+.prompt-flow span {
+  position: relative;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px;
+  text-align: center;
+  color: var(--text-h);
+  background: var(--social-bg);
+  font: 700 14px/1 var(--mono);
+}
+
+.prompt-flow span:not(:last-child)::after {
+  content: ">";
+  position: absolute;
+  right: -12px;
+  top: 50%;
+  translate: 50% -50%;
+  color: var(--accent);
+}
+
+.prompt-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  gap: 16px;
+  margin-top: 28px;
+}
+
+.prompt-card {
+  min-width: 0;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 18px;
+  background: var(--social-bg);
+}
+
+.prompt-card-wide {
+  grid-column: 2;
+}
+
+.prompt-card pre {
+  min-height: 170px;
+  max-height: 360px;
+  overflow: auto;
+  margin: 0;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px;
+  box-sizing: border-box;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  color: var(--text-h);
+  background: var(--code-bg);
+  font: 14px/1.5 var(--mono);
 }
 
 .result-section {
@@ -623,7 +707,9 @@
   }
 
   .coordinate-layout,
-  .point-form {
+  .point-form,
+  .prompt-flow,
+  .prompt-grid {
     grid-template-columns: 1fr;
   }
 
@@ -658,6 +744,18 @@
     top: auto;
     bottom: -15px;
     translate: 50% 0;
+  }
+
+  .prompt-flow span:not(:last-child)::after {
+    content: "v";
+    right: 50%;
+    top: auto;
+    bottom: -15px;
+    translate: 50% 0;
+  }
+
+  .prompt-card-wide {
+    grid-column: auto;
   }
 
   .embedding-row {

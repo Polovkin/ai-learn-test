@@ -1,34 +1,20 @@
 import { useMemo, useState } from 'react'
 import type { FormEvent } from 'react'
 import { getEncoding } from 'js-tiktoken'
+import { createEmbedding as requestEmbedding } from '../services/openAiApi'
+import type { EmbeddingApiResponse } from '../services/openAiApi'
 
 type TokenResult = {
   id: number
   text: string
 }
 
-type EmbeddingResponse = {
-  data: Array<{
-    embedding: number[]
-  }>
-  model: string
-  usage?: {
-    prompt_tokens: number
-    total_tokens: number
-  }
-}
-
-declare const __OPENAI_API_KEY__: string
-
-const EMBEDDING_MODEL = 'text-embedding-3-small'
-const EMBEDDING_DIMENSIONS = 3
-
 function TokenizationPage() {
   const encoder = useMemo(() => getEncoding('cl100k_base'), [])
   const [input, setInput] = useState('')
   const [tokens, setTokens] = useState<TokenResult[]>([])
   const [embedding, setEmbedding] = useState<number[]>([])
-  const [usage, setUsage] = useState<EmbeddingResponse['usage']>()
+  const [embeddingMeta, setEmbeddingMeta] = useState<EmbeddingApiResponse>()
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
 
@@ -47,7 +33,7 @@ function TokenizationPage() {
     event.preventDefault()
     setError('')
     setEmbedding([])
-    setUsage(undefined)
+    setEmbeddingMeta(undefined)
 
     const nextTokens = tokenize()
 
@@ -59,34 +45,10 @@ function TokenizationPage() {
     setIsLoading(true)
 
     try {
-      if (!__OPENAI_API_KEY__) {
-        throw new Error('OPENAI_API_KEY не знайдено в root .env.')
-      }
-
-      const response = await fetch('https://api.openai.com/v1/embeddings', {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${__OPENAI_API_KEY__}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          model: EMBEDDING_MODEL,
-          input,
-          dimensions: EMBEDDING_DIMENSIONS,
-          encoding_format: 'float',
-        }),
-      })
-
-      const payload = await response.json()
-
-      if (!response.ok) {
-        throw new Error(payload?.error?.message || 'OpenAI API повернув помилку.')
-      }
-
-      const embeddingPayload = payload as EmbeddingResponse
       setTokens(nextTokens)
-      setEmbedding(embeddingPayload.data[0]?.embedding ?? [])
-      setUsage(embeddingPayload.usage)
+      const embeddingPayload = await requestEmbedding(input)
+      setEmbedding(embeddingPayload.embedding)
+      setEmbeddingMeta(embeddingPayload)
     } catch (caughtError) {
       setError(
         caughtError instanceof Error
@@ -110,7 +72,7 @@ function TokenizationPage() {
           <h1 id="tokenizer-title">Текст → токени → embedding</h1>
           <p>
             Введи текст, подивись token ids, а потім отримай embedding-вектор
-            для всього input напряму через OpenAI Embeddings API.
+            для всього input через Express endpoint, який уже звертається до OpenAI.
           </p>
         </div>
 
@@ -166,9 +128,9 @@ function TokenizationPage() {
           {embedding.length > 0 ? (
             <>
               <div className="embedding-meta">
-                <span>model: {EMBEDDING_MODEL}</span>
-                <span>dimensions: {EMBEDDING_DIMENSIONS}</span>
-                <span>api tokens: {usage?.total_tokens ?? 'n/a'}</span>
+                <span>model: {embeddingMeta?.model ?? 'n/a'}</span>
+                <span>dimensions: {embeddingMeta?.dimensions ?? embedding.length}</span>
+                <span>api tokens: {embeddingMeta?.usage?.total_tokens ?? 'n/a'}</span>
               </div>
 
               <div className="embedding-bars">

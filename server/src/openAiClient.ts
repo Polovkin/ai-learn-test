@@ -9,6 +9,9 @@ type AgentParams = {
   top_k?: number
 }
 
+const EMBEDDING_MODEL = 'text-embedding-3-small'
+const EMBEDDING_DIMENSIONS = 3
+
 const apiKey = process.env.OPENAI_API_KEY
 const defaultModel = MODELS.GPT_4_1_MINI
 
@@ -34,6 +37,27 @@ export const makeRequest = async (prompt: string, params?: AgentParams): Promise
     return response.output_text
   } catch (error) {
     console.error('Error making OpenAI request:', error)
+    throw error
+  }
+}
+
+export const createEmbedding = async (input: string) => {
+  try {
+    const response = await openAiClient.embeddings.create({
+      model: EMBEDDING_MODEL,
+      input,
+      dimensions: EMBEDDING_DIMENSIONS,
+      encoding_format: 'float',
+    })
+
+    return {
+      embedding: response.data[0]?.embedding ?? [],
+      model: response.model,
+      dimensions: EMBEDDING_DIMENSIONS,
+      usage: response.usage,
+    }
+  } catch (error) {
+    console.error('Error creating OpenAI embedding:', error)
     throw error
   }
 }
