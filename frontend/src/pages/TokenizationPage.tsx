@@ -1,8 +1,8 @@
 import { useMemo, useState } from 'react'
 import type { FormEvent } from 'react'
 import { getEncoding } from 'js-tiktoken'
-import { createEmbedding as requestEmbedding } from '../services/openAiApi'
-import type { EmbeddingApiResponse } from '../services/openAiApi'
+import { requestEmbedding } from '../services/backendApi'
+import type { EmbeddingApiResponse } from '../services/backendApi'
 
 type TokenResult = {
   id: number
@@ -68,11 +68,11 @@ function TokenizationPage() {
     <main className="tokenizer-page">
       <section className="tokenizer-panel" aria-labelledby="tokenizer-title">
         <div className="intro">
-          <p className="eyebrow">js-tiktoken + OpenAI Embeddings API</p>
+          <p className="eyebrow">js-tiktoken + Express backend</p>
           <h1 id="tokenizer-title">Текст → токени → embedding</h1>
           <p>
             Введи текст, подивись token ids, а потім отримай embedding-вектор
-            для всього input через Express endpoint, який уже звертається до OpenAI.
+            для всього input через Express endpoint.
           </p>
         </div>
 

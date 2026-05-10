@@ -1,5 +1,5 @@
 const systemInstruction =
-  'You are a helpful AI tutor. Explain concepts clearly and use simple examples.'
+  'Всі відповіді мають бути суто корейською мовою. більше 3 речень. Не потрібно пояснювати, що ти є штучним інтелектом. Відповідай на запитання користувача, не відхиляючись від теми.'
 
 const fixedContext = [
   'This is a learning demo about prompt assembly.',

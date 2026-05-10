@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import type { FormEvent } from 'react'
-import { sendPromptAssembly } from '../services/openAiApi'
+import { requestPromptAssembly } from '../services/backendApi'
 
 function PromptAssemblyPage() {
   const [userInput, setUserInput] = useState('')
@@ -9,21 +9,21 @@ function PromptAssemblyPage() {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
 
-  const sendToOpenAI = async (event: FormEvent<HTMLFormElement>) => {
+  const sendToBackend = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     setError('')
     setAssembledPrompt('')
     setModelResponse('')
 
     if (!userInput.trim()) {
-      setError('Введи user input перед відправкою в OpenAI.')
+      setError('Введи user input перед відправкою на backend.')
       return
     }
 
     setIsLoading(true)
 
     try {
-      const promptPayload = await sendPromptAssembly(userInput)
+      const promptPayload = await requestPromptAssembly(userInput)
       setAssembledPrompt(promptPayload.assembledPrompt)
       setModelResponse(promptPayload.response)
     } catch (caughtError) {
@@ -41,7 +41,7 @@ function PromptAssemblyPage() {
     <main className="tokenizer-page">
       <section className="tokenizer-panel prompt-panel" aria-labelledby="prompt-title">
         <div className="intro">
-          <p className="eyebrow">Prompt assembly + OpenAI Responses API</p>
+          <p className="eyebrow">Prompt assembly + Express backend</p>
           <h1 id="prompt-title">User input → final prompt → model response</h1>
           <p>
             Цей екран показує, що модель отримує не сирий input користувача, а
@@ -50,7 +50,7 @@ function PromptAssemblyPage() {
           </p>
         </div>
 
-        <form className="tokenizer-form" onSubmit={sendToOpenAI}>
+        <form className="tokenizer-form" onSubmit={sendToBackend}>
           <label htmlFor="prompt-input">User input</label>
           <textarea
             id="prompt-input"
@@ -61,7 +61,7 @@ function PromptAssemblyPage() {
           />
 
           <button type="submit" disabled={isLoading}>
-            {isLoading ? 'Відправляю...' : 'Send to OpenAI'}
+            {isLoading ? 'Відправляю...' : 'Send via Express'}
           </button>
         </form>
 
@@ -70,7 +70,7 @@ function PromptAssemblyPage() {
         <div className="prompt-flow" aria-hidden="true">
           <span>User input</span>
           <span>Prompt assembly</span>
-          <span>OpenAI model</span>
+          <span>Model response</span>
         </div>
 
         <section className="prompt-grid" aria-live="polite">

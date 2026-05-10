@@ -31,7 +31,7 @@ const parseJsonResponse = async <T>(response: Response): Promise<T> => {
   return payload as T
 }
 
-export const createEmbedding = async (input: string) => {
+export const requestEmbedding = async (input: string) => {
   const response = await fetch('/api/embeddings', {
     method: 'POST',
     headers: {
@@ -43,7 +43,7 @@ export const createEmbedding = async (input: string) => {
   return parseJsonResponse<EmbeddingApiResponse>(response)
 }
 
-export const sendPromptAssembly = async (userInput: string) => {
+export const requestPromptAssembly = async (userInput: string) => {
   const response = await fetch('/api/prompt-assembly', {
     method: 'POST',
     headers: {

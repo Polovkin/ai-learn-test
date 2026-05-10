@@ -5,8 +5,13 @@
       "name": "Express TS (dev tsx)",
       "type": "node",
       "request": "launch",
-      "runtimeExecutable": "npx",
-      "runtimeArgs": ["tsx", "watch", "./server/src/index.ts"],
+      "cwd": "${workspaceFolder}/server",
+      "runtimeExecutable": "/bin/zsh",
+      "runtimeArgs": [
+        "-lc",
+        "set -a && source ../.env && set +a && source ~/.nvm/nvm.sh && nvm use 22.16.0 && npm run dev"
+      ],
+      "console": "integratedTerminal",
       "skipFiles": ["<node_internals>/**"]
     },
     {
@@ -20,6 +25,12 @@
         "source ~/.nvm/nvm.sh && nvm use 22.16.0 && npm run dev"
       ],
       "console": "integratedTerminal"
+    }
+  ],
+  "compounds": [
+    {
+      "name": "Full app (Express + Vite)",
+      "configurations": ["Express TS (dev tsx)", "React (Vite)"]
     }
   ]
 }
