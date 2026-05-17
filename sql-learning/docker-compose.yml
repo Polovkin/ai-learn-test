@@ -1,0 +1,17 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: sql_learning_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: sql_learning
+      POSTGRES_USER: dev
+      POSTGRES_PASSWORD: dev_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./sql:/docker-entrypoint-initdb.d
+
+volumes:
+  postgres_data:
