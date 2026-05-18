@@ -10,6 +10,17 @@
       "database": "sql_learning",
       "username": "dev",
       "password": "dev_password"
+    },
+    {
+      "ssh": "Disabled",
+      "previewLimit": 50,
+      "server": "localhost",
+      "port": 5432,
+      "driver": "PostgreSQL",
+      "name": "vector-postgerss",
+      "database": "rag",
+      "username": "postgres",
+      "password": "postgres"
     }
   ]
 }

@@ -1,5 +1,5 @@
 import OpenAI from 'openai'
-import 'dotenv/config'
+import './loadEnv.js'
 import { MODELS } from './settings/ai.settings.js'
 
 type AgentParams = {
