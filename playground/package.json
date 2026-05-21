@@ -1,0 +1,15 @@
+{
+  "name": "playground",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "playground:js": "node js-core/index.js",
+    "playground:js:watch": "node --watch js-core/index.js",
+    "playground:ts": "tsx js-core/index.ts",
+    "playground:ts:watch": "tsx --watch js-core/index.ts"
+  },
+  "devDependencies": {
+    "tsx": "^4.21.0",
+    "typescript": "^6.0.3"
+  }
+}

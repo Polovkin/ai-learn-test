@@ -25,6 +25,27 @@
         "source ~/.nvm/nvm.sh && nvm use 22.16.0 && npm run dev"
       ],
       "console": "integratedTerminal"
+    },
+    {
+      "name": "Playground JS Core",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceFolder}/playground/js-core/index.js",
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "skipFiles": ["<node_internals>/**"]
+    },
+    {
+      "name": "Playground TS Core",
+      "type": "node",
+      "request": "launch",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["tsx", "js-core/index.ts"],
+      "cwd": "${workspaceFolder}/playground",
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "skipFiles": ["<node_internals>/**"]
     }
   ],
   "compounds": [
