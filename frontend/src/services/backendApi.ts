@@ -14,9 +14,30 @@ export type PromptAssemblyApiResponse = {
   response: string
 }
 
+export type UploadRagDocumentResponse = {
+  documentId: string
+  fileName: string
+  chunksCount: number
+}
+
+export type AskRagQuestionResponse = {
+  answer: string
+  chunks: Array<{
+    id: string
+    chunkIndex: number
+    content: string
+    similarity: number
+  }>
+}
+
+export type ClearRagResponse = {
+  deletedChunks: number
+  deletedDocuments: number
+}
+
 const parseJsonResponse = async <T>(response: Response): Promise<T> => {
   const text = await response.text()
-  let payload: { error?: string } = {}
+  let payload: { error?: string; message?: string } = {}
 
   try {
     payload = text ? JSON.parse(text) : {}
@@ -25,7 +46,7 @@ const parseJsonResponse = async <T>(response: Response): Promise<T> => {
   }
 
   if (!response.ok) {
-    throw new Error(payload?.error || 'Backend API повернув помилку.')
+    throw new Error(payload?.message || payload?.error || 'Backend API повернув помилку.')
   }
 
   return payload as T
@@ -53,4 +74,36 @@ export const requestPromptAssembly = async (userInput: string) => {
   })
 
   return parseJsonResponse<PromptAssemblyApiResponse>(response)
+}
+
+export const uploadRagDocument = async (file: File) => {
+  const formData = new FormData()
+  formData.append('file', file)
+
+  const response = await fetch('/api/rag/documents', {
+    method: 'POST',
+    body: formData,
+  })
+
+  return parseJsonResponse<UploadRagDocumentResponse>(response)
+}
+
+export const askRagQuestion = async (input: { documentId: string; question: string }) => {
+  const response = await fetch('/api/rag/ask', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(input),
+  })
+
+  return parseJsonResponse<AskRagQuestionResponse>(response)
+}
+
+export const clearRagDatabase = async () => {
+  const response = await fetch('/api/rag/clear', {
+    method: 'POST',
+  })
+
+  return parseJsonResponse<ClearRagResponse>(response)
 }

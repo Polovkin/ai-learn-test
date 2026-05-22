@@ -10,13 +10,12 @@ type AgentParams = {
 }
 
 const EMBEDDING_MODEL = 'text-embedding-3-small'
-const EMBEDDING_DIMENSIONS = 3
+const EMBEDDING_DIMENSIONS = 1536
 
 const apiKey = process.env.OPENAI_API_KEY
 const defaultModel = MODELS.GPT_4_1_MINI
 
 if (!apiKey) {
-  console.log(process.env)
   throw new Error('OPENAI_API_KEY is not defined')
 }
 
@@ -31,8 +30,6 @@ export const makeRequest = async (prompt: string, params?: AgentParams): Promise
       model: params?.model || defaultModel,
       input: prompt,
     })
-
-    console.log('OpenAI response:', response)
 
     return response.output_text
   } catch (error) {

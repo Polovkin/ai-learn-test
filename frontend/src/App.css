@@ -689,6 +689,149 @@
   border-bottom: 0;
 }
 
+.chunking-panel {
+  width: min(1080px, 100%);
+}
+
+.chunking-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.chunking-toolbar button {
+  min-height: 44px;
+  border: 1px solid var(--accent-border);
+  border-radius: 6px;
+  padding: 0 16px;
+  color: #fff;
+  background: #2563eb;
+  font: 700 14px/1 var(--sans);
+  cursor: pointer;
+}
+
+.chunking-toolbar button:hover:not(:disabled) {
+  background: #1d4ed8;
+}
+
+.chunking-toolbar button:disabled {
+  cursor: wait;
+  opacity: 0.7;
+}
+
+.chunking-toolbar span,
+.rag-summary span {
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 7px 10px;
+  color: var(--text-h);
+  background: var(--social-bg);
+  font: 700 13px/1 var(--mono);
+}
+
+.rag-steps {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 28px;
+}
+
+.rag-step {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px;
+  background: var(--social-bg);
+}
+
+.rag-step h2 {
+  margin: 0;
+  font-size: 17px;
+}
+
+.rag-step strong {
+  display: inline-block;
+  margin-top: 10px;
+  color: var(--text-h);
+  font: 700 13px/1 var(--mono);
+}
+
+.rag-step p {
+  margin: 10px 0 0;
+  color: var(--text);
+}
+
+.rag-step-loading {
+  border-color: #c084fc;
+}
+
+.rag-step-success {
+  border-color: #14b8a6;
+  background: rgba(20, 184, 166, 0.1);
+}
+
+.rag-step-error {
+  border-color: #ef4444;
+  background: rgba(239, 68, 68, 0.08);
+}
+
+.rag-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.rag-answer {
+  margin: 0;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  color: var(--text-h);
+  background: var(--code-bg);
+  font: 14px/1.5 var(--mono);
+}
+
+.rag-sources-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+}
+
+.rag-source-card {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px;
+  background: var(--social-bg);
+}
+
+.rag-source-card h3 {
+  margin: 0 0 8px;
+  overflow-wrap: anywhere;
+  color: var(--text-h);
+  font-size: 16px;
+}
+
+.rag-source-card p {
+  margin: 6px 0 0;
+  color: var(--text);
+  font: 14px/1.35 var(--mono);
+}
+
+.rag-chunk-content {
+  margin: 10px 0 0;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  color: var(--text-h);
+  background: var(--code-bg);
+  font: 13px/1.45 var(--mono);
+}
+
 @media (max-width: 640px) {
   .tokenizer-page {
     padding: 24px 12px;
@@ -709,7 +852,8 @@
   .coordinate-layout,
   .point-form,
   .prompt-flow,
-  .prompt-grid {
+  .prompt-grid,
+  .rag-steps {
     grid-template-columns: 1fr;
   }
 

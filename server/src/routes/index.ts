@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import { createEmbedding, makeRequest } from '../openAiClient.js'
 import { buildAssembledPrompt } from '../promptAssembly.js'
-import ragRouter from './rag.routes.js'
+import ragRouter from '../modules/rag/rag.routes.js'
 
 const router = Router()
 

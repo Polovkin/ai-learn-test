@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import './App.css'
+import ChunkingPage from './pages/ChunkingPage'
 import CoordinateGridPage from './pages/CoordinateGridPage'
 import PromptAssemblyPage from './pages/PromptAssemblyPage'
 import TokenizationPage from './pages/TokenizationPage'
@@ -8,6 +9,7 @@ const routes = {
   tokenization: '#/tokenization',
   coordinateGrid: '#/coordinate-grid',
   promptAssembly: '#/prompt-assembly',
+  chunking: '#/chunking',
 } as const
 
 const getCurrentRoute = () =>
@@ -52,10 +54,17 @@ function App() {
         >
           Prompt Assembly
         </a>
+        <a
+          className={currentRoute === routes.chunking ? 'active' : undefined}
+          href={routes.chunking}
+        >
+          Chunking / RAG
+        </a>
       </nav>
 
       {currentRoute === routes.coordinateGrid && <CoordinateGridPage />}
       {currentRoute === routes.promptAssembly && <PromptAssemblyPage />}
+      {currentRoute === routes.chunking && <ChunkingPage />}
       {currentRoute === routes.tokenization && <TokenizationPage />}
     </>
   )
