@@ -12,6 +12,55 @@ export const ragPool = new Pool({
 
 const toVector = (embedding: number[]) => `[${embedding.join(',')}]`
 
+export const ensureRagSchema = async (): Promise<void> => {
+  const client = await ragPool.connect()
+
+  try {
+    await client.query('BEGIN')
+
+    await client.query('CREATE EXTENSION IF NOT EXISTS vector')
+    await client.query('CREATE EXTENSION IF NOT EXISTS pgcrypto')
+
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS documents (
+        id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+        file_name TEXT NOT NULL,
+        created_at TIMESTAMP NOT NULL DEFAULT NOW()
+      )
+    `)
+
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS document_chunks (
+        id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+        document_id UUID NOT NULL REFERENCES documents(id) ON DELETE CASCADE,
+        chunk_index INT NOT NULL,
+        content TEXT NOT NULL,
+        embedding vector(1536) NOT NULL,
+        created_at TIMESTAMP NOT NULL DEFAULT NOW()
+      )
+    `)
+
+    await client.query(`
+      CREATE INDEX IF NOT EXISTS document_chunks_embedding_idx
+      ON document_chunks
+      USING ivfflat (embedding vector_cosine_ops)
+      WITH (lists = 100)
+    `)
+
+    await client.query(`
+      CREATE INDEX IF NOT EXISTS document_chunks_document_id_idx
+      ON document_chunks (document_id)
+    `)
+
+    await client.query('COMMIT')
+  } catch (error) {
+    await client.query('ROLLBACK')
+    throw error
+  } finally {
+    client.release()
+  }
+}
+
 export const saveDocumentWithChunks = async (input: {
   fileName: string
   chunks: StoredChunkInput[]
@@ -107,6 +156,28 @@ export const clearRagData = async (): Promise<{ deletedChunks: number; deletedDo
 
   try {
     await client.query('BEGIN')
+
+    const existenceResult = await client.query<{
+      chunks_exists: string | null
+      documents_exists: string | null
+    }>(
+      `
+      SELECT
+        to_regclass('public.document_chunks')::text AS chunks_exists,
+        to_regclass('public.documents')::text AS documents_exists
+    `,
+    )
+
+    const chunksExists = Boolean(existenceResult.rows[0]?.chunks_exists)
+    const documentsExists = Boolean(existenceResult.rows[0]?.documents_exists)
+
+    if (!chunksExists || !documentsExists) {
+      await client.query('ROLLBACK')
+      return {
+        deletedChunks: 0,
+        deletedDocuments: 0,
+      }
+    }
 
     const chunksResult = await client.query('DELETE FROM document_chunks')
     const documentsResult = await client.query('DELETE FROM documents')
