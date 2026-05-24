@@ -26,3 +26,9 @@ export type AskRagResponse = {
   answer: string
   chunks: RetrievedChunk[]
 }
+
+export type LatestDocumentResponse = {
+  documentId: string
+  fileName: string
+  chunksCount: number
+}

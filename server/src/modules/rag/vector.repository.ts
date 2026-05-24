@@ -125,6 +125,53 @@ export const documentExists = async (documentId: string): Promise<boolean> => {
   return Boolean(result.rows[0]?.exists)
 }
 
+export const getLatestDocument = async (): Promise<{ documentId: string; fileName: string; chunksCount: number } | null> => {
+  const result = await ragPool.query<{
+    documentId: string
+    fileName: string
+    chunksCount: string
+  }>(
+    `
+    SELECT
+      d.id::text AS "documentId",
+      d.file_name AS "fileName",
+      COUNT(dc.id)::text AS "chunksCount"
+    FROM documents d
+    INNER JOIN document_chunks dc ON dc.document_id = d.id
+    GROUP BY d.id, d.file_name, d.created_at
+    ORDER BY d.created_at DESC
+    LIMIT 1
+  `,
+  )
+
+  const row = result.rows[0]
+
+  if (!row) {
+    return null
+  }
+
+  return {
+    documentId: row.documentId,
+    fileName: row.fileName,
+    chunksCount: Number(row.chunksCount),
+  }
+}
+
+export const documentHasChunks = async (documentId: string): Promise<boolean> => {
+  const result = await ragPool.query<{ exists: boolean }>(
+    `
+    SELECT EXISTS (
+      SELECT 1
+      FROM document_chunks
+      WHERE document_id = $1
+    ) AS exists
+  `,
+    [documentId],
+  )
+
+  return Boolean(result.rows[0]?.exists)
+}
+
 export const searchSimilarChunks = async (input: {
   documentId: string
   questionEmbedding: number[]
@@ -132,13 +179,17 @@ export const searchSimilarChunks = async (input: {
 }): Promise<RetrievedChunk[]> => {
   const result = await ragPool.query<RetrievedChunk>(
     `
+    WITH filtered_chunks AS (
+      SELECT id, chunk_index, content, embedding
+      FROM document_chunks
+      WHERE document_id = $2
+    )
     SELECT
       id::text,
       chunk_index AS "chunkIndex",
       content,
       1 - (embedding <=> $1::vector) AS similarity
-    FROM document_chunks
-    WHERE document_id = $2
+    FROM filtered_chunks
     ORDER BY embedding <=> $1::vector
     LIMIT $3
   `,

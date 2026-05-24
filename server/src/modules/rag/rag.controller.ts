@@ -1,5 +1,5 @@
 import type { Request, Response } from 'express'
-import { askQuestion, clearRagDatabase, uploadDocument } from './rag.service.js'
+import { askQuestion, clearRagDatabase, getLatestRagDocument, uploadDocument } from './rag.service.js'
 import { logRagError } from './rag.logger.js'
 
 const sendMessage = (res: Response, status: number, message: string) => {
@@ -57,6 +57,11 @@ export const askQuestionController = async (req: Request, res: Response) => {
       return
     }
 
+    if (error instanceof Error && error.message === 'Document has no indexed chunks. Re-upload the PDF.') {
+      sendMessage(res, 409, error.message)
+      return
+    }
+
     sendMessage(res, 500, error instanceof Error ? error.message : 'Failed to answer question')
   }
 }
@@ -68,5 +73,15 @@ export const clearRagController = async (_req: Request, res: Response) => {
   } catch (error) {
     logRagError('clear.error', 'Failed to clear RAG database.', error)
     sendMessage(res, 500, 'Failed to clear RAG database')
+  }
+}
+
+export const getLatestDocumentController = async (_req: Request, res: Response) => {
+  try {
+    const result = await getLatestRagDocument()
+    res.json({ document: result })
+  } catch (error) {
+    logRagError('latest.error', 'Failed to fetch latest RAG document.', error)
+    sendMessage(res, 500, 'Failed to fetch latest RAG document')
   }
 }

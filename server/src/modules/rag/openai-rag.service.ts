@@ -4,6 +4,32 @@ import { type RetrievedChunk } from './rag.types.js'
 
 const NO_ANSWER = 'The document does not contain enough information to answer this question.'
 
+const extractResponseText = (response: {
+  output_text?: string
+  output?: Array<{
+    content?: Array<{
+      type?: string
+      text?: string
+    }>
+  }>
+}): string => {
+  const directText = response.output_text?.trim()
+
+  if (directText) {
+    return directText
+  }
+
+  const aggregatedText = (response.output ?? [])
+    .flatMap((item) => item.content ?? [])
+    .filter((item) => item.type === 'output_text' || item.type === 'text')
+    .map((item) => item.text?.trim() ?? '')
+    .filter(Boolean)
+    .join('\n')
+    .trim()
+
+  return aggregatedText
+}
+
 export const generateRagAnswer = async (question: string, chunks: RetrievedChunk[]): Promise<string> => {
   if (!chunks.length) {
     return NO_ANSWER
@@ -20,7 +46,7 @@ export const generateRagAnswer = async (question: string, chunks: RetrievedChunk
       {
         role: 'system',
         content:
-          'You answer only using the provided document chunks. If chunks do not contain enough information, answer exactly: "The document does not contain enough information to answer this question." Do not invent facts.',
+          'Answer using only the provided document chunks. If the answer is not present in the chunks, answer exactly: "The document does not contain enough information to answer this question." Do not invent facts.',
       },
       {
         role: 'user',
@@ -29,5 +55,5 @@ export const generateRagAnswer = async (question: string, chunks: RetrievedChunk
     ],
   })
 
-  return response.output_text.trim() || NO_ANSWER
+  return extractResponseText(response) || NO_ANSWER
 }

@@ -1,10 +1,11 @@
 import { chunkText } from './chunking.service.js'
 import { createEmbedding } from './embedding.service.js'
 import { logRagStep, previewText } from './rag.logger.js'
-import { type AskRagResponse, type UploadDocumentResponse } from './rag.types.js'
+import { TOP_K } from './rag.constants.js'
+import { type AskRagResponse, type LatestDocumentResponse, type UploadDocumentResponse } from './rag.types.js'
 import { extractTextFromPdf } from './pdf.service.js'
 import { generateRagAnswer } from './openai-rag.service.js'
-import { clearRagData, documentExists, saveDocumentWithChunks, searchSimilarChunks } from './vector.repository.js'
+import { clearRagData, documentExists, documentHasChunks, getLatestDocument, saveDocumentWithChunks, searchSimilarChunks } from './vector.repository.js'
 
 export const uploadDocument = async (file: Express.Multer.File): Promise<UploadDocumentResponse> => {
   logRagStep('upload.started', 'Started document upload flow.', {
@@ -68,6 +69,16 @@ export const askQuestion = async (question: string, documentId: string): Promise
     throw new Error('Document does not exist')
   }
 
+  const hasChunks = await documentHasChunks(documentId)
+
+  if (!hasChunks) {
+    throw new Error('Document has no indexed chunks. Re-upload the PDF.')
+  }
+
+  logRagStep('chunks.presence', 'Verified that document has indexed chunks.', {
+    documentId,
+  })
+
   const questionEmbedding = await createEmbedding(question)
 
   logRagStep('question.embedded', 'Question embedding created.', {
@@ -77,7 +88,7 @@ export const askQuestion = async (question: string, documentId: string): Promise
   const chunks = await searchSimilarChunks({
     documentId,
     questionEmbedding,
-    limit: 3,
+    limit: TOP_K,
   })
 
   logRagStep('chunks.retrieved', 'Retrieved top similar chunks.', {
@@ -103,4 +114,8 @@ export const clearRagDatabase = async (): Promise<{ deletedChunks: number; delet
   logRagStep('clear.completed', 'RAG database was cleared.', result)
 
   return result
+}
+
+export const getLatestRagDocument = async (): Promise<LatestDocumentResponse | null> => {
+  return getLatestDocument()
 }

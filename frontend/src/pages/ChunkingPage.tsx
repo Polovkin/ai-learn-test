@@ -1,8 +1,9 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import type { ChangeEvent, FormEvent } from 'react'
 import {
   askRagQuestion,
   clearRagDatabase,
+  getLatestRagDocument,
   uploadRagDocument,
   type AskRagQuestionResponse,
 } from '../services/backendApi'
@@ -146,6 +147,27 @@ function ChunkingPage() {
   }
 
   const isAskReady = pipeline.upload === 'success' && Boolean(documentId)
+
+  useEffect(() => {
+    const hydrateLatestDocument = async () => {
+      try {
+        const payload = await getLatestRagDocument()
+
+        if (!payload.document) {
+          return
+        }
+
+        setDocumentId(payload.document.documentId)
+        setFileName(payload.document.fileName)
+        setChunksCount(payload.document.chunksCount)
+        setPipeline((prev) => ({ ...prev, upload: 'success' }))
+      } catch {
+        // Intentionally ignore hydrate errors and allow manual upload flow.
+      }
+    }
+
+    void hydrateLatestDocument()
+  }, [])
 
   return (
     <main className="tokenizer-page">

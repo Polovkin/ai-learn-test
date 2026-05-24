@@ -1,7 +1,5 @@
 import { type TextChunk } from './rag.types.js'
-
-const DEFAULT_CHUNK_SIZE = 1200
-const DEFAULT_CHUNK_OVERLAP = 200
+import { DEFAULT_CHUNK_OVERLAP, DEFAULT_CHUNK_SIZE } from './rag.constants.js'
 
 export const chunkText = (
   text: string,

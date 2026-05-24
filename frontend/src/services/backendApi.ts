@@ -35,6 +35,14 @@ export type ClearRagResponse = {
   deletedDocuments: number
 }
 
+export type LatestRagDocumentResponse = {
+  document: {
+    documentId: string
+    fileName: string
+    chunksCount: number
+  } | null
+}
+
 const parseJsonResponse = async <T>(response: Response): Promise<T> => {
   const text = await response.text()
   let payload: { error?: string; message?: string } = {}
@@ -106,4 +114,12 @@ export const clearRagDatabase = async () => {
   })
 
   return parseJsonResponse<ClearRagResponse>(response)
+}
+
+export const getLatestRagDocument = async () => {
+  const response = await fetch('/api/rag/documents/latest', {
+    method: 'GET',
+  })
+
+  return parseJsonResponse<LatestRagDocumentResponse>(response)
 }
