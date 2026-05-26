@@ -5,11 +5,11 @@
       "name": "Express TS (dev tsx)",
       "type": "node",
       "request": "launch",
-      "cwd": "${workspaceFolder}/server",
+      "cwd": "${workspaceFolder}/apps/llm-visualizer-api",
       "runtimeExecutable": "/bin/zsh",
       "runtimeArgs": [
         "-lc",
-        "set -a && source ../.env && set +a && source ~/.nvm/nvm.sh && nvm use 22.16.0 && npm run dev"
+        "set -a && source ../../.env && set +a && source ~/.nvm/nvm.sh && nvm use 22.16.0 && npm run dev"
       ],
       "console": "integratedTerminal",
       "skipFiles": ["<node_internals>/**"]
@@ -18,7 +18,7 @@
       "name": "React (Vite)",
       "type": "node",
       "request": "launch",
-      "cwd": "${workspaceFolder}/frontend",
+      "cwd": "${workspaceFolder}/apps/llm-visualizer-web",
       "runtimeExecutable": "/bin/zsh",
       "runtimeArgs": [
         "-lc",
@@ -30,7 +30,7 @@
       "name": "Playground JS Core",
       "type": "node",
       "request": "launch",
-      "program": "${workspaceFolder}/playground/js-core/index.js",
+      "program": "${workspaceFolder}/labs/playground/js-core/index.js",
       "cwd": "${workspaceFolder}",
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",
@@ -42,7 +42,7 @@
       "request": "launch",
       "runtimeExecutable": "npx",
       "runtimeArgs": ["tsx", "js-core/index.ts"],
-      "cwd": "${workspaceFolder}/playground",
+      "cwd": "${workspaceFolder}/labs/playground",
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",
       "skipFiles": ["<node_internals>/**"]
