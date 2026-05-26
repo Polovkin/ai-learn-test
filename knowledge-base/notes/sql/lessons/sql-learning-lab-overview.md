@@ -19,3 +19,5 @@ docker-compose up -d
 ## Next
 - Add query performance comparison scripts.
 - Add joins/window-function focused exercises.
+
+## Related\n- [SQL Map](../../../maps/sql.md)\n- [SQL Lab](../../../../labs/sql/README.md)\n- [Init SQL Script](../../../../labs/sql/sql/001_init.sql)

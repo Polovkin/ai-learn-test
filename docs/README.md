@@ -6,3 +6,4 @@ Use this folder for:
 - process docs
 - templates
 - reference assets used by multiple areas
+

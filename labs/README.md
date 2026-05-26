@@ -8,3 +8,4 @@ Use `labs/` for:
 - isolated technical experiments
 
 Code stays here. Markdown notes should be moved to `knowledge-base/`.
+

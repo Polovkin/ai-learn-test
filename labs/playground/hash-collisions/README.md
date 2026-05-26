@@ -20,3 +20,5 @@ python3 -m http.server 8080
 ## Next
 - Add selectable hash algorithms.
 - Add random input generator and collision counters.
+
+## Related\n- [Playground Overview](../README.md)\n- [JS/TS Map](../../../knowledge-base/maps/js-ts.md)

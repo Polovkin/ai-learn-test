@@ -7,3 +7,4 @@ Contains:
 - `docker-compose.yml` local DB environment
 
 All SQL markdown notes are stored in `knowledge-base/notes/sql/`.
+

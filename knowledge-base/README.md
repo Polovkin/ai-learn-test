@@ -5,3 +5,4 @@ This folder uses a Zettelkasten-style approach:
 - `terms/`: glossary terms.
 - `maps/`: topic indexes (entry points).
 - `journal/`: dated learning logs.
+

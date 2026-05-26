@@ -1,59 +1,52 @@
 # AGENTS.md
 
 ## Purpose
-This repository is a structured learning monorepo for:
-- LLM and RAG experiments
-- JavaScript/TypeScript practice
-- SQL practice
-- Node.js backend development
-- Visual interactive learning demos
+This is a learning monorepo for LLM, JS/TS, SQL, and Node.js.
+Primary goal: keep learning artifacts structured and easy to evolve.
 
-The primary goals are clarity, repeatability, and clean growth of learning artifacts.
-
-## Top-Level Structure Contract
-- `apps/` production-style learning applications (long-running, multi-module)
-- `labs/` focused experiments and visualizations (short-cycle learning)
-- `packages/` shared assets used by 2+ places (types/utils/prompts)
-- `knowledge-base/` notes, terms, maps, and learning journal
-- `docs/` process and documentation assets/templates
-- `tools/` helper scripts for repo maintenance and automation
+## Structure
+- `apps/` long-form learning apps (multi-module, frontend/backend integration)
+- `labs/` focused experiments and visual demos
+- `packages/` shared code used by 2+ places
+- `knowledge-base/` markdown notes, terms, maps, journal
+- `docs/` shared process/reference docs
+- `tools/` helper scripts
+- `inbox/` temporary unsorted files
 
 ## Placement Rules
-1. Put work in `labs/` when it explores one concept and is independently runnable.
-2. Put work in `apps/` when it spans pages/modules or backend+frontend integration.
-3. Move reusable logic to `packages/` only after repeated use across at least 2 locations.
-4. Put markdown knowledge artifacts in `knowledge-base/`, not in `labs/`.
+1. Concept demo or isolated runnable code -> `labs/`
+2. Product-like multi-page/module work -> `apps/`
+3. Reused code (2+ consumers) -> `packages/`
+4. Markdown knowledge content -> `knowledge-base/`
+5. Fast unstructured capture -> `inbox/`
 
-## Naming Conventions
-- Labs: `labs/<topic>/<YYYY-MM-DD>-<slug>` (new labs)
+## Naming
+- Labs: `labs/<topic>/<YYYY-MM-DD>-<slug>`
 - Notes: `knowledge-base/notes/<topic>/<slug>.md`
 - Terms: `knowledge-base/terms/<term>.md`
-- Topic maps: `knowledge-base/maps/<topic>.md`
+- Maps: `knowledge-base/maps/<topic>.md`
+- Journal: `knowledge-base/journal/YYYY-MM-DD-<slug>.md`
 
-## Rules for Notes vs Code
-- `knowledge-base/` should contain `.md` knowledge files.
-- `labs/` and `apps/` should contain runnable code and project assets.
-- If a folder contains mixed materials, move markdown notes to `knowledge-base` and leave code in place.
+## Inbox Triage (Mandatory)
+When asked to organize `inbox/`, agent must:
+1. Scan all files recursively.
+2. Move markdown notes/terms/journal entries to `knowledge-base`.
+3. Move runnable code to `labs`.
+4. Move reusable code to `packages`.
+5. Move process docs/templates to `docs`.
+6. Keep ambiguous files in `inbox/pending/` with short reason.
+7. Update relevant map files in `knowledge-base/maps/`.
+8. Report exact move summary (`from -> to`) and unresolved files.
 
-## Required Checklist for New Lab
-- Include `README.md` with: `Goal`, `Run`, `Result`, `What I Learned`, `Next`.
-- Keep setup minimal and runnable from the lab folder.
-- Link the lab from at least one map in `knowledge-base/maps/`.
-
-## Required Checklist for New Note/Term
-- One file = one core idea.
-- Include links to related labs/apps/terms.
-- Update related topic map(s).
-
-## Change Safety
-- Do not perform destructive git/file operations unless explicitly requested.
+## Minimum Quality Rules
+- New lab should include `README.md` with `Goal`, `Run`, `Result`, `What I Learned`, `Next`.
+- New note/term should link to related materials via topic maps.
+- Do not change business behavior during structural refactors unless requested.
 - Do not modify unrelated files.
-- Preserve existing behavior during structural refactors.
 
-## Validation Commands (from repo root)
+## Validation
+Run from repo root when relevant:
 - `npm run typecheck`
 - `npm run build`
 - `npm run lint`
 - `npm run test`
-
-If any command fails, document what failed and why.

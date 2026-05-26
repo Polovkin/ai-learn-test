@@ -7,3 +7,4 @@ Current apps:
 - `llm-visualizer-api` (backend)
 
 Use `apps/` when work needs multiple modules/pages, stable architecture, or frontend-backend integration.
+

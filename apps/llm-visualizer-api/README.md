@@ -9,3 +9,5 @@ Run the SQL from `src/modules/rag/rag.schema.sql` before using the RAG API.
 Set `DATABASE_URL` and `OPENAI_API_KEY` before starting the server.
 
 `pdf-parse` extracts text for the MVP, but it does not provide reliable page-level citations in this implementation. Ingested chunks currently store `page = 1` instead of exact PDF pages.
+
+## Related\n- [Apps Overview](../README.md)\n- [Node.js Map](../../knowledge-base/maps/node.md)\n- [LLM Map](../../knowledge-base/maps/llm.md)
