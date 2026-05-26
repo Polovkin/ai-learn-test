@@ -5,6 +5,7 @@
 - [Init SQL Script](../../labs/sql/sql/001_init.sql)
 
 ## Notes
-- [Core SQL Commands](../../labs/sql/core-sql-commands.md)
-- [Base Lesson](../../labs/sql/16.05_base_lesson.md)
-- [Indexes](../../labs/sql/26.05_indexes.md)
+- [SQL Learning Lab Overview](../notes/sql/lessons/sql-learning-lab-overview.md)
+- [Core SQL Commands](../notes/sql/lessons/core-sql-commands.md)
+- [Base Lesson](../notes/sql/lessons/16.05_base_lesson.md)
+- [Indexes](../notes/sql/lessons/26.05_indexes.md)
