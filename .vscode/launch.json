@@ -2,29 +2,33 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Express TS (dev tsx)",
+      "name": "Express API (tsx debug)",
       "type": "node",
       "request": "launch",
       "cwd": "${workspaceFolder}/apps/llm-visualizer-api",
-      "runtimeExecutable": "/bin/zsh",
+      "runtimeExecutable": "node",
       "runtimeArgs": [
-        "-lc",
-        "set -a && source ../../.env && set +a && source ~/.nvm/nvm.sh && nvm use 22.16.0 && npm run dev"
+        "--import",
+        "tsx",
+        "src/index.ts"
       ],
+      "envFile": "${workspaceFolder}/.env",
       "console": "integratedTerminal",
       "skipFiles": ["<node_internals>/**"]
     },
     {
-      "name": "React (Vite)",
-      "type": "node",
+      "name": "Vite Dev Server",
+      "type": "node-terminal",
       "request": "launch",
       "cwd": "${workspaceFolder}/apps/llm-visualizer-web",
-      "runtimeExecutable": "/bin/zsh",
-      "runtimeArgs": [
-        "-lc",
-        "source ~/.nvm/nvm.sh && nvm use 22.16.0 && npm run dev"
-      ],
-      "console": "integratedTerminal"
+      "command": "npm run dev"
+    },
+    {
+      "name": "Web (Chrome)",
+      "type": "pwa-chrome",
+      "request": "launch",
+      "url": "http://localhost:5173",
+      "webRoot": "${workspaceFolder}/apps/llm-visualizer-web/src"
     },
     {
       "name": "Playground JS Core",
@@ -50,8 +54,8 @@
   ],
   "compounds": [
     {
-      "name": "Full app (Express + Vite)",
-      "configurations": ["Express TS (dev tsx)", "React (Vite)"]
+      "name": "Full app debug (Express + Vite)",
+      "configurations": ["Express API (tsx debug)", "Vite Dev Server"]
     }
   ]
 }

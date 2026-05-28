@@ -4,15 +4,11 @@ import { type RetrievedChunk } from './rag.types.js'
 
 const NO_ANSWER = 'The document does not contain enough information to answer this question.'
 
-const extractResponseText = (response: {
-  output_text?: string
-  output?: Array<{
-    content?: Array<{
-      type?: string
-      text?: string
-    }>
-  }>
-}): string => {
+const isObjectRecord = (value: unknown): value is Record<string, unknown> => {
+  return typeof value === 'object' && value !== null && !Array.isArray(value)
+}
+
+const extractResponseText = (response: { output_text?: string; output?: unknown[] }): string => {
   const directText = response.output_text?.trim()
 
   if (directText) {
@@ -20,9 +16,14 @@ const extractResponseText = (response: {
   }
 
   const aggregatedText = (response.output ?? [])
-    .flatMap((item) => item.content ?? [])
+    .filter(isObjectRecord)
+    .flatMap((item) => {
+      const content = item.content
+      return Array.isArray(content) ? content : []
+    })
+    .filter(isObjectRecord)
     .filter((item) => item.type === 'output_text' || item.type === 'text')
-    .map((item) => item.text?.trim() ?? '')
+    .map((item) => (typeof item.text === 'string' ? item.text.trim() : ''))
     .filter(Boolean)
     .join('\n')
     .trim()
@@ -41,6 +42,7 @@ export const generateRagAnswer = async (question: string, chunks: RetrievedChunk
 
   const response = await openAiClient.responses.create({
     model: MODELS.GPT_4_1_MINI,
+    stream: false,
     temperature: 0,
     input: [
       {

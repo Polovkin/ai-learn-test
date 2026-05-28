@@ -14,6 +14,15 @@ export type PromptAssemblyApiResponse = {
   response: string
 }
 
+export type CalculatorApiResponse = {
+  answer: string
+  toolCall: {
+    name: 'calculateCalories' | 'calculateTravelTime' | 'convertCurrency'
+    arguments: Record<string, number>
+    result: Record<string, number>
+  } | null
+}
+
 export type UploadRagDocumentResponse = {
   documentId: string
   fileName: string
@@ -82,6 +91,18 @@ export const requestPromptAssembly = async (userInput: string) => {
   })
 
   return parseJsonResponse<PromptAssemblyApiResponse>(response)
+}
+
+export const requestCalculatorAnswer = async (message: string) => {
+  const response = await fetch('/api/ai/calculator', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ message }),
+  })
+
+  return parseJsonResponse<CalculatorApiResponse>(response)
 }
 
 export const uploadRagDocument = async (file: File) => {

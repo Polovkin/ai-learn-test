@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import './App.css'
 import ChunkingPage from './pages/ChunkingPage'
+import CalculatorToolCallingPage from './pages/CalculatorToolCallingPage'
 import CoordinateGridPage from './pages/CoordinateGridPage'
 import PromptAssemblyPage from './pages/PromptAssemblyPage'
 import TokenizationPage from './pages/TokenizationPage'
@@ -10,6 +11,7 @@ const routes = {
   coordinateGrid: '#/coordinate-grid',
   promptAssembly: '#/prompt-assembly',
   chunking: '#/chunking',
+  calculator: '#/calculator',
 } as const
 
 const getCurrentRoute = () =>
@@ -60,11 +62,18 @@ function App() {
         >
           Chunking / RAG
         </a>
+        <a
+          className={currentRoute === routes.calculator ? 'active' : undefined}
+          href={routes.calculator}
+        >
+          Tool Calling: Calculator
+        </a>
       </nav>
 
       {currentRoute === routes.coordinateGrid && <CoordinateGridPage />}
       {currentRoute === routes.promptAssembly && <PromptAssemblyPage />}
       {currentRoute === routes.chunking && <ChunkingPage />}
+      {currentRoute === routes.calculator && <CalculatorToolCallingPage />}
       {currentRoute === routes.tokenization && <TokenizationPage />}
     </>
   )

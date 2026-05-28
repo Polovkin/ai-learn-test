@@ -17,7 +17,15 @@ app.use(express.json())
 app.use('/', indexRouter)
 
 const bootstrap = async () => {
-  await ensureRagSchema()
+  try {
+    await ensureRagSchema()
+    console.log('RAG schema is ready.')
+  } catch (error) {
+    console.warn(
+      'RAG initialization failed. Server will continue without RAG database features.',
+    )
+    console.warn(error)
+  }
 
   app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`)

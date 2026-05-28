@@ -2,12 +2,14 @@ import { Router } from 'express'
 import { createEmbedding, makeRequest } from '../openAiClient.js'
 import { buildAssembledPrompt } from '../promptAssembly.js'
 import ragRouter from '../modules/rag/rag.routes.js'
+import calculatorRouter from '../modules/ai-calculator/calculator.routes.js'
 
 const router = Router()
 
 const promt = 'Що таке штучний інтелект?'
 
 router.use(ragRouter)
+router.use(calculatorRouter)
 
 router.post('/api/prompt-assembly', async (req, res) => {
   try {

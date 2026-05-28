@@ -11,6 +11,9 @@ export default [
     files: ['**/*.ts'],
     languageOptions: {
       parser: tsParser,
+      globals: {
+        console: 'readonly'
+      },
       parserOptions: {
         ecmaVersion: 'latest',
         sourceType: 'module'
