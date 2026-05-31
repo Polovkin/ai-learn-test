@@ -1,5 +1,3 @@
-export type UILogger = (message: string) => void;
-
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3001";
 const ACCESS_TOKEN_KEY = "jwt_learning_access_token";
 const AUTH_PATHS_WITHOUT_REFRESH = ["/auth/login", "/auth/refresh"];
@@ -17,9 +15,8 @@ function authHeaders() {
   return { Authorization: `Bearer ${accessToken}` };
 }
 
-function handleAuthFailure(logger?: UILogger) {
+function handleAuthFailure() {
   clearAccessToken();
-  logger?.("auth state cleared");
 }
 
 export function setAccessToken(token: string) {
@@ -51,26 +48,24 @@ export async function parseResponse(response: Response) {
 
 let refreshPromise: Promise<string> | null = null;
 
-async function getFreshAccessToken(logger?: UILogger) {
+async function getFreshAccessToken() {
   if (!refreshPromise) {
-    logger?.("refresh started");
-
     refreshPromise = refreshToken()
       .then((newToken) => {
         setAccessToken(newToken);
-        logger?.("refresh success");
         return newToken;
       })
       .catch((error) => {
-        logger?.("refresh failed");
-        handleAuthFailure(logger);
+        handleAuthFailure();
         throw error;
       })
       .finally(() => {
         refreshPromise = null;
       });
   } else {
-    logger?.("waiting for existing refresh");
+    console.warn(
+      "Refresh already in progress, waiting for existing refresh to complete.",
+    );
   }
 
   return refreshPromise;
@@ -92,9 +87,7 @@ export async function refreshToken() {
   return data.accessToken as string;
 }
 
-export async function apiFetch<T>(path: string, logger?: UILogger): Promise<T> {
-  logger?.(`request started: ${path}`);
-
+export async function apiFetch<T>(path: string): Promise<T> {
   const response = await fetch(`${API_URL}${path}`, {
     method: "GET",
     headers: {
@@ -106,7 +99,6 @@ export async function apiFetch<T>(path: string, logger?: UILogger): Promise<T> {
 
   if (response.status !== 401) {
     const data = await parseResponse(response);
-    logger?.(`response received: ${path}`);
 
     if (!response.ok) {
       throw new Error(
@@ -117,10 +109,7 @@ export async function apiFetch<T>(path: string, logger?: UILogger): Promise<T> {
     return data as T;
   }
 
-  logger?.("got 401");
-
   if (shouldSkipRefresh(path)) {
-    logger?.(`auth request failed without refresh: ${path}`);
     const data = await parseResponse(response);
     throw new Error(
       `Auth request failed: ${response.status} ${JSON.stringify(data)}`,
@@ -130,25 +119,8 @@ export async function apiFetch<T>(path: string, logger?: UILogger): Promise<T> {
   // Intentional learning bug:
   // Concurrent 401 responses can trigger multiple refresh calls.
   // Do not fix this yet.
-  // test flag
-  const test = true;
-  logger?.("refresh started");
+  await getFreshAccessToken();
 
-  if (!test) {
-    try {
-      const newToken = await refreshToken();
-      setAccessToken(newToken);
-      logger?.("refresh success");
-    } catch (error) {
-      logger?.("refresh failed");
-      handleAuthFailure(logger);
-      throw error;
-    }
-  } else {
-    await getFreshAccessToken(logger);
-  }
-
-  logger?.(`retry started: ${path}`);
   const retryResponse = await fetch(`${API_URL}${path}`, {
     method: "GET",
     headers: {
@@ -160,12 +132,10 @@ export async function apiFetch<T>(path: string, logger?: UILogger): Promise<T> {
 
   const retryData = await parseResponse(retryResponse);
   if (!retryResponse.ok) {
-    logger?.("retry failed");
     throw new Error(
       `Retry failed: ${retryResponse.status} ${JSON.stringify(retryData)}`,
     );
   }
 
-  logger?.("retry success");
   return retryData as T;
 }

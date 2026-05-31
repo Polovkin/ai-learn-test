@@ -33,9 +33,6 @@
 
       <h3>Errors</h3>
       <pre>{{ JSON.stringify(apiErrors, null, 2) }}</pre>
-
-      <h3>UI logs</h3>
-      <pre>{{ logs.join('\n') }}</pre>
     </section>
   </main>
 </template>
@@ -61,7 +58,6 @@ const authError = ref('');
 
 const apiResults = ref<Record<string, unknown>>({});
 const apiErrors = ref<Record<string, string>>({});
-const logs = ref<string[]>([]);
 
 const tokenPreview = computed(() => {
   const token = getAccessToken();
@@ -70,38 +66,30 @@ const tokenPreview = computed(() => {
   return `${token.slice(0, 10)}...${token.slice(-10)}`;
 });
 
-function uiLog(message: string) {
-  logs.value.push(`${new Date().toLocaleTimeString()} - ${message}`);
-}
-
 function handleAuthFailure(error: unknown): string {
   const message = String(error);
   if (message.includes('Refresh failed')) {
     isLoggedIn.value = false;
     authError.value = 'Session expired. Please login again.';
-    uiLog('refresh failed -> logged out');
   }
   return message;
 }
 
 async function onLogin() {
   authError.value = '';
-  uiLog('login started');
 
   try {
     const data = await login(email.value, password.value);
     setAccessToken(data.accessToken);
     isLoggedIn.value = true;
-    uiLog('login success');
   } catch (error) {
     authError.value = String(error);
-    uiLog('login failed');
   }
 }
 
 async function loadProfile() {
   try {
-    apiResults.value.profile = await getProfile(uiLog);
+    apiResults.value.profile = await getProfile();
     delete apiErrors.value.profile;
   } catch (error) {
     apiErrors.value.profile = handleAuthFailure(error);
@@ -109,12 +97,11 @@ async function loadProfile() {
 }
 
 async function loadAll() {
-  uiLog('load all protected data started');
   const tasks = {
-    profile: getProfile(uiLog),
-    orders: getOrders(uiLog),
-    notifications: getNotifications(uiLog),
-    settings: getSettings(uiLog)
+    profile: getProfile(),
+    orders: getOrders(),
+    notifications: getNotifications(),
+    settings: getSettings()
   };
 
   const entries = Object.entries(tasks);
@@ -133,7 +120,6 @@ async function loadAll() {
 
 function onClearToken() {
   clearAccessToken();
-  uiLog('access token cleared');
 }
 
 async function onLogout() {
@@ -142,7 +128,6 @@ async function onLogout() {
   } finally {
     isLoggedIn.value = false;
     clearAccessToken();
-    uiLog('logged out');
   }
 }
 </script>

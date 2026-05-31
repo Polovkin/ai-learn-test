@@ -5,7 +5,6 @@ import {
   parseResponse,
   refreshToken,
   setAccessToken,
-  type UILogger,
 } from "./api-fetch";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3001";
@@ -16,7 +15,6 @@ export {
   getAccessToken,
   refreshToken,
   setAccessToken,
-  type UILogger,
 };
 
 export async function login(email: string, password: string) {
@@ -52,22 +50,22 @@ export async function logout() {
   }
 }
 
-export function getMe(logger?: UILogger) {
-  return apiFetch("/auth/me", logger);
+export function getMe() {
+  return apiFetch("/auth/me");
 }
 
-export function getProfile(logger?: UILogger) {
-  return apiFetch("/profile", logger);
+export function getProfile() {
+  return apiFetch("/profile");
 }
 
-export function getOrders(logger?: UILogger) {
-  return apiFetch("/orders", logger);
+export function getOrders() {
+  return apiFetch("/orders");
 }
 
-export function getNotifications(logger?: UILogger) {
-  return apiFetch("/notifications", logger);
+export function getNotifications() {
+  return apiFetch("/notifications");
 }
 
-export function getSettings(logger?: UILogger) {
-  return apiFetch("/settings", logger);
+export function getSettings() {
+  return apiFetch("/settings");
 }
