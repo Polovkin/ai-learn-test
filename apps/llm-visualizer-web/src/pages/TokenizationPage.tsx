@@ -3,11 +3,15 @@ import type { FormEvent } from 'react'
 import { getEncoding } from 'js-tiktoken'
 import { requestEmbedding } from '../services/backendApi'
 import type { EmbeddingApiResponse } from '../services/backendApi'
+import { playground } from '../playground'
+
 
 type TokenResult = {
   id: number
   text: string
 }
+
+playground()
 
 function TokenizationPage() {
   const encoder = useMemo(() => getEncoding('cl100k_base'), [])
