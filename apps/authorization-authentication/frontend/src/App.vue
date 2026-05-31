@@ -56,7 +56,7 @@ import {
 
 const email = ref('demo@example.com');
 const password = ref('password123');
-const isLoggedIn = ref(false);
+const isLoggedIn = ref(Boolean(getAccessToken()));
 const authError = ref('');
 
 const apiResults = ref<Record<string, unknown>>({});
@@ -72,6 +72,16 @@ const tokenPreview = computed(() => {
 
 function uiLog(message: string) {
   logs.value.push(`${new Date().toLocaleTimeString()} - ${message}`);
+}
+
+function handleAuthFailure(error: unknown): string {
+  const message = String(error);
+  if (message.includes('Refresh failed')) {
+    isLoggedIn.value = false;
+    authError.value = 'Session expired. Please login again.';
+    uiLog('refresh failed -> logged out');
+  }
+  return message;
 }
 
 async function onLogin() {
@@ -94,7 +104,7 @@ async function loadProfile() {
     apiResults.value.profile = await getProfile(uiLog);
     delete apiErrors.value.profile;
   } catch (error) {
-    apiErrors.value.profile = String(error);
+    apiErrors.value.profile = handleAuthFailure(error);
   }
 }
 
@@ -116,7 +126,7 @@ async function loadAll() {
       apiResults.value[key] = result.value;
       delete apiErrors.value[key];
     } else {
-      apiErrors.value[key] = String(result.reason);
+      apiErrors.value[key] = handleAuthFailure(result.reason);
     }
   });
 }

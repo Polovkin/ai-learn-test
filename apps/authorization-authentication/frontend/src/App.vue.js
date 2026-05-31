@@ -2,7 +2,7 @@ import { computed, ref } from 'vue';
 import { clearAccessToken, getAccessToken, getNotifications, getOrders, getProfile, getSettings, login, logout, setAccessToken } from './api';
 const email = ref('demo@example.com');
 const password = ref('password123');
-const isLoggedIn = ref(false);
+const isLoggedIn = ref(Boolean(getAccessToken()));
 const authError = ref('');
 const apiResults = ref({});
 const apiErrors = ref({});

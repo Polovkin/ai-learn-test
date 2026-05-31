@@ -54,7 +54,7 @@ export class AuthService {
     const payload: JwtPayload = { sub: userId, email, type: 'refresh' };
     return this.jwtService.sign(payload, {
       secret: process.env.JWT_REFRESH_SECRET,
-      expiresIn: '7d'
+      expiresIn: '30s'
     });
   }
 
