@@ -18,6 +18,15 @@ const tokenPreview = computed(() => {
 function uiLog(message) {
     logs.value.push(`${new Date().toLocaleTimeString()} - ${message}`);
 }
+function handleAuthFailure(error) {
+    const message = String(error);
+    if (message.includes('Refresh failed')) {
+        isLoggedIn.value = false;
+        authError.value = 'Session expired. Please login again.';
+        uiLog('refresh failed -> logged out');
+    }
+    return message;
+}
 async function onLogin() {
     authError.value = '';
     uiLog('login started');
@@ -38,7 +47,7 @@ async function loadProfile() {
         delete apiErrors.value.profile;
     }
     catch (error) {
-        apiErrors.value.profile = String(error);
+        apiErrors.value.profile = handleAuthFailure(error);
     }
 }
 async function loadAll() {
@@ -58,7 +67,7 @@ async function loadAll() {
             delete apiErrors.value[key];
         }
         else {
-            apiErrors.value[key] = String(result.reason);
+            apiErrors.value[key] = handleAuthFailure(result.reason);
         }
     });
 }
