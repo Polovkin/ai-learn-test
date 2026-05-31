@@ -50,12 +50,33 @@
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",
       "skipFiles": ["<node_internals>/**"]
+    },
+    {
+      "name": "JWT Learning Backend (Nest)",
+      "type": "node-terminal",
+      "request": "launch",
+      "cwd": "${workspaceFolder}/apps/authorization-authentication/backend",
+      "command": "npm run start:dev"
+    },
+    {
+      "name": "JWT Learning Frontend (Vite)",
+      "type": "node-terminal",
+      "request": "launch",
+      "cwd": "${workspaceFolder}/apps/authorization-authentication/frontend",
+      "command": "npm run dev"
     }
   ],
   "compounds": [
     {
       "name": "Full app debug (Express + Vite)",
       "configurations": ["Express API (tsx debug)", "Vite Dev Server"]
+    },
+    {
+      "name": "JWT Learning Full Stack (Backend + Frontend)",
+      "configurations": [
+        "JWT Learning Backend (Nest)",
+        "JWT Learning Frontend (Vite)"
+      ]
     }
   ]
 }
