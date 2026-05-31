@@ -5,7 +5,10 @@ let accessToken = '';
 export type UILogger = (message: string) => void;
 
 function authHeaders() {
-  return accessToken ? { Authorization: `Bearer ${accessToken}` } : {};
+  if (!accessToken) {
+    return {} as Record<string, string>;
+  }
+  return { Authorization: `Bearer ${accessToken}` };
 }
 
 export function setAccessToken(token: string) {
@@ -107,9 +110,14 @@ export async function apiFetch<T>(path: string, logger?: UILogger): Promise<T> {
   // Concurrent 401 responses can trigger multiple refresh calls.
   // Do not fix this yet.
   logger?.('refresh started');
-  const newToken = await refreshToken();
-  setAccessToken(newToken);
-  logger?.('refresh success');
+  try {
+    const newToken = await refreshToken();
+    setAccessToken(newToken);
+    logger?.('refresh success');
+  } catch (error) {
+    logger?.('refresh failed');
+    throw error;
+  }
 
   logger?.(`retry started: ${path}`);
   const retryResponse = await fetch(`${API_URL}${path}`, {
