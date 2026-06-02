@@ -1,52 +1,40 @@
-import {
-  apiFetch,
-  clearAccessToken,
-  getAccessToken,
-  parseResponse,
-  refreshToken,
-  setAccessToken,
-} from "./api-fetch";
+import { httpService, type ApiFetchOptions } from "./http.service";
 
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3001";
+export function apiFetch<T>(path: string, options?: ApiFetchOptions) {
+  return httpService.apiFetch<T>(path, options);
+}
 
-export {
-  apiFetch,
-  clearAccessToken,
-  getAccessToken,
-  refreshToken,
-  setAccessToken,
-};
+export function setAccessToken(token: string) {
+  httpService.setAccessToken(token);
+}
+
+export function getAccessToken() {
+  return httpService.getAccessToken();
+}
+
+export function clearAccessToken() {
+  httpService.clearAccessToken();
+}
+
+export function refreshToken() {
+  return httpService.refreshToken();
+}
 
 export async function login(email: string, password: string) {
-  const response = await fetch(`${API_URL}/auth/login`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    credentials: "include",
-    body: JSON.stringify({ email, password }),
+  const data = await httpService.post<{ accessToken: string }>("/auth/login", {
+    email,
+    password,
   });
-
-  const data = await parseResponse(response);
-  if (!response.ok) {
-    throw new Error(`Login failed: ${response.status} ${JSON.stringify(data)}`);
-  }
 
   setAccessToken(data.accessToken);
   return data;
 }
 
 export async function logout() {
-  const response = await fetch(`${API_URL}/auth/logout`, {
-    method: "POST",
-    credentials: "include",
-  });
-
-  clearAccessToken();
-
-  if (!response.ok) {
-    const data = await parseResponse(response);
-    throw new Error(
-      `Logout failed: ${response.status} ${JSON.stringify(data)}`,
-    );
+  try {
+    await httpService.post("/auth/logout");
+  } finally {
+    clearAccessToken();
   }
 }
 
