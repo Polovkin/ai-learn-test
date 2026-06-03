@@ -57,3 +57,21 @@ export function getNotifications() {
 export function getSettings() {
   return apiFetch("/settings");
 }
+
+export interface WalletBalanceResponse {
+  balance: number;
+}
+
+export function getWalletBalance() {
+  return apiFetch<WalletBalanceResponse>("/wallet/balance");
+}
+
+export function resetWalletBalance() {
+  return httpService.post<WalletBalanceResponse>("/wallet/reset");
+}
+
+export function withdrawWithoutMutex(amount: number) {
+  return httpService.post<WalletBalanceResponse>("/wallet/withdraw-without-mutex", {
+    amount,
+  });
+}

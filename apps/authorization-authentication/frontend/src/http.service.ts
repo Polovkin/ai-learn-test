@@ -46,14 +46,10 @@ class HttpService {
   }
 
   async post<T>(path: string, body?: unknown): Promise<T> {
-    return this.executeRequest<T>(
-      path,
-      {
-        method: "POST",
-        body,
-      },
-      this.errorPrefix(path),
-    );
+    return this.apiFetch<T>(path, {
+      method: "POST",
+      body,
+    });
   }
 
   private async executeRequest<T>(

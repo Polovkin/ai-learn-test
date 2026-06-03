@@ -23,6 +23,7 @@ body {
   border: 1px solid #e5e7eb;
   border-radius: 12px;
   padding: 1rem;
+  margin-bottom: 1rem;
 }
 
 label {
@@ -46,6 +47,11 @@ input {
 button {
   padding: 0.5rem 0.75rem;
   cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
 }
 
 pre {

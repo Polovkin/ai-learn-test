@@ -34,21 +34,45 @@
       <h3>Errors</h3>
       <pre>{{ JSON.stringify(apiErrors, null, 2) }}</pre>
     </section>
+
+    <section class="card wallet-demo">
+      <h2>Wallet race condition demo</h2>
+      <p><strong>Current balance:</strong> {{ walletBalanceText }}</p>
+
+      <div class="actions">
+        <button :disabled="isWalletBusy" @click="onResetWallet">Reset wallet</button>
+        <button :disabled="isWalletBusy" @click="runWithoutMutexDemo">
+          Run without mutex demo
+        </button>
+      </div>
+
+      <p>
+        Expected sequential result for three withdraw requests is 10, but this
+        intentionally unsafe implementation can finish with 70 because all
+        requests may read the same balance before writing.
+      </p>
+
+      <h3>Wallet log</h3>
+      <pre>{{ walletLogText }}</pre>
+    </section>
   </main>
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import {
   clearAccessToken,
   getAccessToken,
+  getWalletBalance,
   getNotifications,
   getOrders,
   getProfile,
   getSettings,
   login,
   logout,
-  setAccessToken
+  resetWalletBalance,
+  setAccessToken,
+  withdrawWithoutMutex
 } from './api';
 
 const email = ref('demo@example.com');
@@ -58,12 +82,23 @@ const authError = ref('');
 
 const apiResults = ref<Record<string, unknown>>({});
 const apiErrors = ref<Record<string, string>>({});
+const walletBalance = ref<number | null>(null);
+const walletLog = ref<string[]>([]);
+const isWalletBusy = ref(false);
 
 const tokenPreview = computed(() => {
   const token = getAccessToken();
   if (!token) return '(empty)';
   if (token.length <= 20) return token;
   return `${token.slice(0, 10)}...${token.slice(-10)}`;
+});
+
+const walletBalanceText = computed(() => {
+  return walletBalance.value === null ? '(not loaded)' : walletBalance.value;
+});
+
+const walletLogText = computed(() => {
+  return walletLog.value.length > 0 ? walletLog.value.join('\n') : 'No wallet actions yet.';
 });
 
 function handleAuthFailure(error: unknown): string {
@@ -73,6 +108,16 @@ function handleAuthFailure(error: unknown): string {
     authError.value = 'Session expired. Please login again.';
   }
   return message;
+}
+
+function appendWalletLog(message: string) {
+  walletLog.value.push(message);
+}
+
+async function refreshWalletBalance() {
+  const data = await getWalletBalance();
+  walletBalance.value = data.balance;
+  return data.balance;
 }
 
 async function onLogin() {
@@ -122,6 +167,60 @@ function onClearToken() {
   clearAccessToken();
 }
 
+async function onResetWallet() {
+  isWalletBusy.value = true;
+  walletLog.value = [];
+
+  try {
+    const data = await resetWalletBalance();
+    walletBalance.value = data.balance;
+    appendWalletLog(`Wallet reset to ${data.balance}`);
+  } catch (error) {
+    appendWalletLog(`Reset failed: ${String(error)}`);
+  } finally {
+    isWalletBusy.value = false;
+  }
+}
+
+async function runWithoutMutexDemo() {
+  isWalletBusy.value = true;
+  walletLog.value = [];
+
+  try {
+    const reset = await resetWalletBalance();
+    walletBalance.value = reset.balance;
+    appendWalletLog(`Wallet reset to ${reset.balance}`);
+    appendWalletLog('Starting 3 parallel withdrawWithoutMutex(30) requests');
+
+    const settled = await Promise.allSettled([
+      withdrawWithoutMutex(30),
+      withdrawWithoutMutex(30),
+      withdrawWithoutMutex(30)
+    ]);
+
+    settled.forEach((result, index) => {
+      const requestNumber = index + 1;
+
+      if (result.status === 'fulfilled') {
+        appendWalletLog(
+          `Request ${requestNumber} fulfilled with balance ${result.value.balance}`
+        );
+      } else {
+        appendWalletLog(`Request ${requestNumber} rejected: ${String(result.reason)}`);
+      }
+    });
+
+    const finalBalance = await refreshWalletBalance();
+    appendWalletLog(`Final balance: ${finalBalance}`);
+    appendWalletLog('Correct sequential result would be 10.');
+    appendWalletLog('Without mutex, the intentionally unsafe result can be 70.');
+  } catch (error) {
+    appendWalletLog(`Demo failed: ${String(error)}`);
+  } finally {
+    isWalletBusy.value = false;
+  }
+}
+
 async function onLogout() {
   try {
     await logout();
@@ -130,4 +229,10 @@ async function onLogout() {
     clearAccessToken();
   }
 }
+
+onMounted(() => {
+  refreshWalletBalance().catch((error) => {
+    appendWalletLog(`Initial balance load failed: ${String(error)}`);
+  });
+});
 </script>
