@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import './App.css'
 import ChunkingPage from './pages/ChunkingPage'
 import CalculatorToolCallingPage from './pages/CalculatorToolCallingPage'
+import CompoundProductCardPage from './pages/CompoundProductCardPage'
 import CoordinateGridPage from './pages/CoordinateGridPage'
 import PromptAssemblyPage from './pages/PromptAssemblyPage'
 import TokenizationPage from './pages/TokenizationPage'
@@ -12,6 +13,7 @@ const routes = {
   promptAssembly: '#/prompt-assembly',
   chunking: '#/chunking',
   calculator: '#/calculator',
+  compoundProductCard: '#/compound-product-card',
 } as const
 
 const getCurrentRoute = () =>
@@ -68,12 +70,19 @@ function App() {
         >
           Tool Calling: Calculator
         </a>
+        <a
+          className={currentRoute === routes.compoundProductCard ? 'active' : undefined}
+          href={routes.compoundProductCard}
+        >
+          Compound ProductCard
+        </a>
       </nav>
 
       {currentRoute === routes.coordinateGrid && <CoordinateGridPage />}
       {currentRoute === routes.promptAssembly && <PromptAssemblyPage />}
       {currentRoute === routes.chunking && <ChunkingPage />}
       {currentRoute === routes.calculator && <CalculatorToolCallingPage />}
+      {currentRoute === routes.compoundProductCard && <CompoundProductCardPage />}
       {currentRoute === routes.tokenization && <TokenizationPage />}
     </>
   )

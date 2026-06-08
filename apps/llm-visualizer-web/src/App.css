@@ -3,6 +3,7 @@
   top: 0;
   z-index: 10;
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
   gap: 8px;
   padding: 12px;
@@ -410,6 +411,49 @@
   padding: 20px;
   color: var(--text);
   background: var(--social-bg);
+}
+
+.compound-example {
+  margin-top: 32px;
+}
+
+.compound-product-card {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  width: fit-content;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+  background: var(--social-bg);
+}
+
+.compound-product-card img {
+  width: 160px;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+.compound-product-content {
+  display: grid;
+  gap: 6px;
+  min-width: 180px;
+}
+
+.compound-product-content h2 {
+  margin: 0;
+}
+
+.compound-product-card button {
+  min-height: 40px;
+  border: 1px solid var(--accent-border);
+  border-radius: 6px;
+  padding: 0 14px;
+  color: #fff;
+  background: #2563eb;
+  font: 700 14px/1 var(--sans);
+  cursor: pointer;
 }
 
 .coordinate-layout {
