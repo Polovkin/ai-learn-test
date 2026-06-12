@@ -1,5 +1,5 @@
 declare module 'pdf-parse/lib/pdf-parse.js' {
-  import pdfParse = require('pdf-parse')
+  const pdfParse: typeof import('pdf-parse')
 
   export default pdfParse
 }

@@ -12,7 +12,7 @@ type AgentParams = {
 const EMBEDDING_MODEL = 'text-embedding-3-small'
 const EMBEDDING_DIMENSIONS = 1536
 
-const apiKey = process.env.OPENAI_API_KEY
+const apiKey = process.env.OPENAI_API_KEY || 'key'
 const defaultModel = MODELS.GPT_4_1_MINI
 
 if (!apiKey) {

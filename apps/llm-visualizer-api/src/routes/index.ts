@@ -77,7 +77,7 @@ router.get('/', async (_req, res) => {
       title: 'Hello Express TS',
       message: 'response',
     })
-  } catch (error) {
+  } catch {
     res.render('index', {
       title: 'Error',
       message: 'OpenAI request failed',
