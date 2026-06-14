@@ -1,5 +1,4 @@
 import { openAiClient } from '../../openAiClient.js'
-import { logRagStep } from './rag.logger.js'
 
 const EMBEDDING_MODEL = 'text-embedding-3-small'
 const EMBEDDING_DIMENSIONS = 1536
@@ -22,10 +21,6 @@ export const createEmbedding = async (input: string): Promise<number[]> => {
       return response.data[0]?.embedding ?? []
     } catch (error) {
       lastError = error
-      logRagStep('embeddings.retry', 'Embedding request failed, retrying if attempts remain.', {
-        attempt: attempt + 1,
-        maxAttempts: MAX_RETRIES + 1,
-      })
 
       if (attempt < MAX_RETRIES) {
         await wait((attempt + 1) * 400)

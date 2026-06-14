@@ -6,12 +6,10 @@ export const postCalculatorController = async (req: Request, res: Response) => {
     const message = req.body?.message
 
     if (typeof message !== 'string' || !message.trim()) {
-      console.warn('[calculator] request.invalid_body')
       res.status(400).json({ error: 'Message must be a non-empty string.' })
       return
     }
 
-    console.log('[calculator] request.received')
     const result = await getCalculatorAnswer(message)
     res.json(result)
   } catch (error) {

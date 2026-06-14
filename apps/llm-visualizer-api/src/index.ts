@@ -3,7 +3,6 @@ import { fileURLToPath } from 'node:url'
 import express from 'express'
 import { ensureRagSchema } from './modules/rag/vector.repository.js'
 import indexRouter from './routes/index.js'
-import { nodePlayground } from './node-playground.js'
 
 const app = express()
 const port = 3000
@@ -20,17 +19,11 @@ app.use('/', indexRouter)
 const bootstrap = async () => {
   try {
     await ensureRagSchema()
-    console.log('RAG schema is ready.')
   } catch (error) {
-    console.warn('RAG initialization failed. Server will continue without RAG database features.')
-    console.warn(error)
+    console.error('RAG initialization failed. Server will continue without RAG database features.', error)
   }
 
-  app.listen(port, () => {
-    console.log(`Server is running on http://localhost:${port}`)
-
-    nodePlayground()
-  })
+  app.listen(port)
 }
 
 bootstrap().catch((error) => {

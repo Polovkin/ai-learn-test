@@ -57,21 +57,15 @@ router.get('/', async (_req, res) => {
   try {
     const temperatures = [0.5, 1.0, 1.5]
 
-    Promise.all(
+    void Promise.all(
       temperatures.map((t) =>
         makeRequest(promt, {
           temperature: t,
         }),
       ),
-    )
-      .then((responses) => {
-        responses.forEach((response, index) => {
-          console.log(`Response ${index + 1}:`, response)
-        })
-      })
-      .catch((error) => {
-        console.error('Error making requests:', error)
-      })
+    ).catch((error) => {
+      console.error('Error making requests:', error)
+    })
 
     res.render('index', {
       title: 'Hello Express TS',
