@@ -55,18 +55,6 @@ router.post('/api/embeddings', async (req, res) => {
 
 router.get('/', async (_req, res) => {
   try {
-    const temperatures = [0.5, 1.0, 1.5]
-
-    void Promise.all(
-      temperatures.map((t) =>
-        makeRequest(promt, {
-          temperature: t,
-        }),
-      ),
-    ).catch((error) => {
-      console.error('Error making requests:', error)
-    })
-
     res.render('index', {
       title: 'Hello Express TS',
       message: 'response',
