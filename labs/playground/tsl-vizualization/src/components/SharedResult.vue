@@ -9,37 +9,37 @@ const status = computed(() => {
     const alice = dhStore.parties.alice;
     const bob = dhStore.parties.bob;
     const bothPublicReady = (
-        alice.publicSteps === parties.alice.secretSteps
-        && bob.publicSteps === parties.bob.secretSteps
+        alice.publicSteps === dhStore.secretSteps.alice
+        && bob.publicSteps === dhStore.secretSteps.bob
     );
     const bothSharedReady = (
-        alice.sharedSteps === parties.alice.secretSteps
-        && bob.sharedSteps === parties.bob.secretSteps
+        alice.sharedSteps === dhStore.secretSteps.alice
+        && bob.sharedSteps === dhStore.secretSteps.bob
     );
 
     if (!bothPublicReady) {
         return {
-            text: "Секретні лічильники ще крутяться. Публічними стануть тільки фінальні числа: 8 від Аліси і 19 від Колі.",
+            text: `Спочатку розрахуйте публічні числа. Алісі потрібно ${dhStore.secretSteps.alice} кроків, Колі - ${dhStore.secretSteps.bob}.`,
             tone: "waiting",
         };
     }
 
     if (!bothSharedReady) {
         return {
-            text: "Публічні числа вже відомі: Аліса сказала 8, Коля сказав 19. Тепер кожен рахує ключ зі своїм секретним лічильником.",
+            text: `Публічні числа готові: Аліса має ${alice.publicPosition}, Коля має ${bob.publicPosition}. Тепер розрахуйте спільний ключ.`,
             tone: "waiting",
         };
     }
 
     if (dhStore.sharedMatch) {
         return {
-            text: `Збіглось: Аліса і Коля отримали ${alice.sharedPosition}. Це і є спільний секрет.`,
+            text: `Готово: Аліса і Коля отримали однаковий спільний ключ ${alice.sharedPosition}.`,
             tone: "success",
         };
     }
 
     return {
-        text: "Не збіглось. Десь у кроках помилка.",
+        text: "Ключі не збіглися. Перевірте кількість кроків і повторіть розрахунок.",
         tone: "",
     };
 });
@@ -48,7 +48,7 @@ const status = computed(() => {
 <template>
     <section class="shared-result" aria-live="polite">
         <p :class="status.tone">{{ status.text }}</p>
-        <button type="button" @click="dhStore.reset()">Скинути демо</button>
+        <button type="button" @click="dhStore.reset()">Скинути розрахунок</button>
     </section>
 </template>
 

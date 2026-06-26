@@ -14,6 +14,12 @@ const partyConfig = computed(() => parties[props.partyId]);
 const otherPartyId = computed(() => partyConfig.value.sharedFromParty);
 const otherParty = computed(() => dhStore.parties[otherPartyId.value]);
 const progress = computed(() => dhStore.partyProgress(props.partyId));
+const secretSteps = computed({
+    get: () => dhStore.secretSteps[props.partyId],
+    set: (value: number | string) => {
+        dhStore.setSecretSteps(props.partyId, Number(value));
+    },
+});
 
 const sharedPosition = computed(() => (
     party.value.sharedPosition === null ? "-" : String(party.value.sharedPosition)
@@ -26,35 +32,35 @@ const sharedKey = computed(() => (
 const sharedFormula = computed(() => {
     if (
         party.value.sharedSteps === 0
-        && otherParty.value.publicSteps < parties[otherPartyId.value].secretSteps
+        && otherParty.value.publicSteps < dhStore.secretSteps[otherPartyId.value]
     ) {
-        return `Чекає публічне число від ${parties[otherPartyId.value].name}`;
+        return `Очікуємо публічне число від ${parties[otherPartyId.value].name}`;
     }
 
     if (party.value.sharedSteps === 0) {
-        return `Вхід: ${otherParty.value.publicPosition}. Обчислення ключа ще не почалось.`;
+        return `Вхідне публічне число: ${otherParty.value.publicPosition}. Розрахунок ключа ще не почато.`;
     }
 
     return party.value.sharedFormula;
 });
 
 const publicButtonText = computed(() => (
-    progress.value.publicDone ? "Публічне число готове" : `Крок ${partyConfig.value.name}`
+    progress.value.publicDone ? "Публічне число готове" : "Зробити крок"
 ));
 
 const sharedButtonText = computed(() => (
-    progress.value.sharedDone ? "Спільний ключ готовий" : "Наступний крок ключа"
+    progress.value.sharedDone ? "Спільний ключ готовий" : "Зробити крок"
 ));
 
 const historyItems = computed(() => [
     ...party.value.publicHistory.map((position, index) => ({
         id: `public-${index}`,
-        text: `секретний шлях ${index}: ${position}`,
+        text: `публічне число, крок ${index}: ${position}`,
         shared: false,
     })),
     ...party.value.sharedHistory.map((position, index) => ({
         id: `shared-${index}`,
-        text: `ключ ${index}: ${position}`,
+        text: `спільний ключ, крок ${index}: ${position}`,
         shared: true,
     })),
 ]);
@@ -65,17 +71,20 @@ const historyItems = computed(() => [
         <header class="party-header">
             <div>
                 <p class="party-label">{{ partyConfig.name }}</p>
-                <h2>Секрет: {{ partyConfig.secretSteps }} кроків</h2>
+                <label class="secret-control">
+                    <span>Кількість секретних кроків</span>
+                    <input v-model.number="secretSteps" type="number" min="0" max="99" inputmode="numeric" />
+                </label>
             </div>
             <strong class="key-chip">{{ sharedKey }}</strong>
         </header>
 
         <section class="phase">
-            <h3>1. Публічний крик</h3>
+            <h3>1. Розрахунок публічного числа</h3>
             <p>
-                Секретні кроки у демо:
+                Виконано кроків:
                 <strong>{{ party.publicSteps }}</strong>
-                / {{ partyConfig.secretSteps }}
+                / {{ secretSteps }}
             </p>
             <p>
                 Публічне число:
@@ -88,18 +97,18 @@ const historyItems = computed(() => [
         </section>
 
         <section class="phase">
-            <h3>2. Обчислює спільний ключ</h3>
+            <h3>2. Розрахунок спільного ключа</h3>
             <p>
-                Вхід від {{ parties[otherPartyId].name }}:
+                Вхідне публічне число від {{ parties[otherPartyId].name }}:
                 <strong>{{ otherParty.publicPosition }}</strong>
             </p>
             <p>
-                Секретний лічильник:
+                Виконано кроків:
                 <strong>{{ party.sharedSteps }}</strong>
-                / {{ partyConfig.secretSteps }}
+                / {{ secretSteps }}
             </p>
             <p>
-                Спільний секрет:
+                Спільний ключ:
                 <strong>{{ sharedPosition }}</strong>
             </p>
             <p class="formula">{{ sharedFormula }}</p>
@@ -108,7 +117,7 @@ const historyItems = computed(() => [
             </button>
         </section>
 
-        <ol class="history-list" :aria-label="`Історія ${partyConfig.name}`">
+        <ol class="history-list" :aria-label="`Історія розрахунків: ${partyConfig.name}`">
             <li v-for="item in historyItems" :key="item.id" :class="{ 'shared-history-item': item.shared }">
                 {{ item.text }}
             </li>
@@ -153,6 +162,34 @@ const historyItems = computed(() => [
 .party-header h2 {
     font-size: 24px;
     margin: 0;
+}
+
+.secret-control {
+    display: grid;
+    gap: 6px;
+}
+
+.secret-control span {
+    color: #172033;
+    font-size: 20px;
+    font-weight: 900;
+}
+
+.secret-control input {
+    background: rgba(255, 255, 255, 0.82);
+    border: 1px solid #cad3e5;
+    border-radius: 8px;
+    color: #172033;
+    font: inherit;
+    font-size: 20px;
+    font-weight: 900;
+    max-width: 120px;
+    padding: 8px 10px;
+}
+
+.secret-control input:focus {
+    border-color: #27385f;
+    outline: 3px solid rgba(39, 56, 95, 0.16);
 }
 
 .key-chip {

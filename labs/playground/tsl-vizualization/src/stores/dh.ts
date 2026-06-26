@@ -1,28 +1,66 @@
 import { defineStore } from "pinia";
-import { initialPosition, modulus, multiplier, parties } from "../ts/constants";
+import {
+    attackerSearchLimit,
+    defaultSecretSteps,
+    initialPosition,
+    modulus,
+    multiplier,
+    parties,
+} from "../ts/constants";
 import { getNextPosition } from "../ts/math";
-import type { DhState, PartyId, PartyState, Phase } from "../ts/types";
+import type {
+    AttackerState,
+    DhState,
+    PartyId,
+    PartyState,
+    Phase,
+} from "../ts/types";
 
 function createPartyState(): PartyState {
     return {
         publicPosition: initialPosition,
         publicSteps: 0,
         publicHistory: [initialPosition],
-        publicFormula: "Стартує з 1",
+        publicFormula: "Стартова позиція: 1",
         sharedPosition: null,
         sharedSteps: 0,
         sharedHistory: [],
-        sharedFormula: "Чекає на публічне число іншої сторони",
+        sharedFormula: "Очікуємо публічне число іншої сторони",
+    };
+}
+
+function createInitialParties(): DhState["parties"] {
+    return {
+        alice: createPartyState(),
+        bob: createPartyState(),
+    };
+}
+
+function createInitialAttacker(): AttackerState {
+    return {
+        calculatedAt: null,
+        elapsedMs: null,
+        results: null,
     };
 }
 
 function createInitialState(): DhState {
     return {
-        parties: {
-            alice: createPartyState(),
-            bob: createPartyState(),
+        parties: createInitialParties(),
+        secretSteps: {
+            alice: defaultSecretSteps.alice,
+            bob: defaultSecretSteps.bob,
         },
+        attacker: createInitialAttacker(),
     };
+}
+
+function normalizeSecretSteps(value: number): number {
+    if (!Number.isFinite(value)) {
+        return 0;
+    }
+
+    return Math.max(0, Math.min(99, Math.trunc(value)));
 }
 
 function stepPosition(previous: number, factor: number): {
@@ -37,11 +75,26 @@ function stepPosition(previous: number, factor: number): {
     };
 }
 
+function findEquivalentSteps(target: number): number[] {
+    let position = initialPosition;
+    const matches: number[] = [];
+
+    for (let steps = 0; steps <= attackerSearchLimit; steps += 1) {
+        if (position === target) {
+            matches.push(steps);
+        }
+
+        position = getNextPosition(position, multiplier);
+    }
+
+    return matches;
+}
+
 export const useDhStore = defineStore("dh", {
     state: createInitialState,
     getters: {
         canStepPublic: (state) => (partyId: PartyId): boolean => (
-            state.parties[partyId].publicSteps < parties[partyId].secretSteps
+            state.parties[partyId].publicSteps < state.secretSteps[partyId]
         ),
         canStepShared: (state) => (partyId: PartyId): boolean => {
             const party = state.parties[partyId];
@@ -49,8 +102,8 @@ export const useDhStore = defineStore("dh", {
             const otherParty = state.parties[otherPartyId];
 
             return (
-                otherParty.publicSteps === parties[otherPartyId].secretSteps
-                && party.sharedSteps < parties[partyId].secretSteps
+                otherParty.publicSteps === state.secretSteps[otherPartyId]
+                && party.sharedSteps < state.secretSteps[partyId]
             );
         },
         sharedMatch: (state): boolean => {
@@ -60,8 +113,8 @@ export const useDhStore = defineStore("dh", {
             return (
                 aliceShared !== null
                 && bobShared !== null
-                && state.parties.alice.sharedSteps === parties.alice.secretSteps
-                && state.parties.bob.sharedSteps === parties.bob.secretSteps
+                && state.parties.alice.sharedSteps === state.secretSteps.alice
+                && state.parties.bob.sharedSteps === state.secretSteps.bob
                 && aliceShared === bobShared
             );
         },
@@ -69,8 +122,8 @@ export const useDhStore = defineStore("dh", {
             publicDone: boolean;
             sharedDone: boolean;
         } => ({
-            publicDone: state.parties[partyId].publicSteps === parties[partyId].secretSteps,
-            sharedDone: state.parties[partyId].sharedSteps === parties[partyId].secretSteps,
+            publicDone: state.parties[partyId].publicSteps === state.secretSteps[partyId],
+            sharedDone: state.parties[partyId].sharedSteps === state.secretSteps[partyId],
         }),
     },
     actions: {
@@ -89,6 +142,7 @@ export const useDhStore = defineStore("dh", {
                 party.publicSteps += 1;
                 party.publicHistory.push(step.current);
                 party.publicFormula = step.formula;
+                this.attacker = createInitialAttacker();
 
                 return;
             }
@@ -110,9 +164,43 @@ export const useDhStore = defineStore("dh", {
             party.sharedSteps += 1;
             party.sharedHistory.push(step.current);
             party.sharedFormula = step.formula;
+            this.attacker = createInitialAttacker();
+        },
+        setSecretSteps(partyId: PartyId, value: number): void {
+            this.secretSteps[partyId] = normalizeSecretSteps(value);
+            this.parties = createInitialParties();
+            this.attacker = createInitialAttacker();
+        },
+        calculateAttacker(): void {
+            const startedAt = performance.now();
+            const aliceEquivalentSteps = findEquivalentSteps(this.parties.alice.publicPosition);
+            const bobEquivalentSteps = findEquivalentSteps(this.parties.bob.publicPosition);
+            const elapsedMs = performance.now() - startedAt;
+
+            this.attacker = {
+                calculatedAt: new Date().toLocaleTimeString("uk-UA"),
+                elapsedMs,
+                results: {
+                    alice: {
+                        party: "alice",
+                        publicPosition: this.parties.alice.publicPosition,
+                        foundSteps: aliceEquivalentSteps[0] ?? null,
+                        equivalentSteps: aliceEquivalentSteps,
+                        attempts: attackerSearchLimit + 1,
+                    },
+                    bob: {
+                        party: "bob",
+                        publicPosition: this.parties.bob.publicPosition,
+                        foundSteps: bobEquivalentSteps[0] ?? null,
+                        equivalentSteps: bobEquivalentSteps,
+                        attempts: attackerSearchLimit + 1,
+                    },
+                },
+            };
         },
         reset(): void {
-            this.$patch(createInitialState());
+            this.parties = createInitialParties();
+            this.attacker = createInitialAttacker();
         },
     },
 });

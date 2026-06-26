@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import AttackerPanel from "./components/AttackerPanel.vue";
 import DialPanel from "./components/DialPanel.vue";
 import PartyCard from "./components/PartyCard.vue";
 import PublicRules from "./components/PublicRules.vue";
@@ -11,12 +12,12 @@ import SharedResult from "./components/SharedResult.vue";
             <p class="eyebrow">Іграшковий Diffie-Hellman</p>
             <h1>Циферблат на 23 поділки</h1>
             <p class="lead">
-                У справжньому протоколі число величезне, а тут беремо маленьке просте число
+                У справжньому протоколі модуль дуже великий. У цій демонстрації беремо мале просте число
                 <strong>23</strong>
-                і крок
+                і множник
                 <strong>×5</strong>
-                . Рух вперед рахувати легко, а от за позицією відновити кількість кроків - це
-                дискретний логарифм.
+                . За кількістю секретних кроків легко отримати публічне число, але за публічним
+                числом важко відновити кількість кроків.
             </p>
         </section>
 
@@ -30,6 +31,8 @@ import SharedResult from "./components/SharedResult.vue";
                 <PartyCard party-id="bob" />
             </div>
         </section>
+
+        <AttackerPanel />
 
         <SharedResult />
     </main>

@@ -1,19 +1,19 @@
 <template>
-    <section class="public-rules" aria-label="Публічні параметри">
+    <section class="public-rules" aria-label="Параметри демонстрації">
         <div class="rule">
-            <span class="label">Публічно</span>
+            <span class="label">Модуль</span>
             <strong>p = 23</strong>
-            <span>циферблат</span>
+            <span>розмір циферблата</span>
         </div>
         <div class="rule">
-            <span class="label">Публічно</span>
+            <span class="label">Множник</span>
             <strong>g = 5</strong>
-            <span>множник кроку</span>
+            <span>кожен крок множить позицію</span>
         </div>
         <div class="rule">
-            <span class="label">Старт</span>
+            <span class="label">Початок</span>
             <strong>1</strong>
-            <span>перша позиція</span>
+            <span>стартова позиція</span>
         </div>
     </section>
 </template>

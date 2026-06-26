@@ -77,14 +77,14 @@ function pointClasses(value: number): Record<string, boolean> {
 <template>
     <aside class="dial-panel">
         <div class="dial-title">
-            <h2>Стрілка скаче по циферблату</h2>
+            <h2>Позиції на циферблаті</h2>
             <p>
-                Немає видимого порядку: вперед легко, а за публічним числом відновити секретний
-                лічильник важко.
+                Лінії показують послідовність множень. Суцільні лінії ведуть до публічного числа,
+                пунктирні - до спільного ключа.
             </p>
         </div>
 
-        <svg class="dial" viewBox="0 0 520 520" role="img" aria-label="Візуалізація позицій на циферблаті">
+        <svg class="dial" viewBox="0 0 520 520" role="img" aria-label="Позиції та переходи на циферблаті">
             <line
                 v-for="line in traceLines"
                 :key="line.id"
@@ -118,7 +118,7 @@ function pointClasses(value: number): Record<string, boolean> {
         <div class="legend">
             <span class="legend-item alice-color">Аліса</span>
             <span class="legend-item bob-color">Коля</span>
-            <span class="legend-item shared-color">Спільний етап</span>
+            <span class="legend-item shared-color">Спільний ключ</span>
         </div>
     </aside>
 </template>
@@ -156,22 +156,24 @@ function pointClasses(value: number): Record<string, boolean> {
 
 .dial-line {
     fill: none;
-    opacity: 0.7;
+    opacity: 0.96;
     stroke-linecap: round;
-    stroke-width: 3;
+    stroke-width: 4;
 }
 
 .dial-line-alice {
-    stroke: #d64550;
+    stroke: #c1121f;
 }
 
 .dial-line-bob {
-    stroke: #2364aa;
+    stroke: #005bbb;
 }
 
 .dial-line-shared {
-    opacity: 0.95;
+    opacity: 1;
+    stroke: #007a35;
     stroke-dasharray: 7 8;
+    stroke-width: 4.5;
 }
 
 .dial-point {
@@ -236,7 +238,7 @@ function pointClasses(value: number): Record<string, boolean> {
 }
 
 .shared-color {
-    color: #1f8a55;
+    color: #007a35;
 }
 
 @media (max-width: 980px) {

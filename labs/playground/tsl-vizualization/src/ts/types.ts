@@ -20,6 +20,8 @@ export type PartyState = {
 
 export type DhState = {
     parties: Record<PartyId, PartyState>;
+    secretSteps: Record<PartyId, number>;
+    attacker: AttackerState;
 };
 
 export type DialTrace = {
@@ -27,4 +29,18 @@ export type DialTrace = {
     party: PartyId;
     phase: Phase;
     history: number[];
+};
+
+export type AttackerTargetResult = {
+    party: PartyId;
+    publicPosition: number;
+    foundSteps: number | null;
+    equivalentSteps: number[];
+    attempts: number;
+};
+
+export type AttackerState = {
+    calculatedAt: string | null;
+    elapsedMs: number | null;
+    results: Record<PartyId, AttackerTargetResult> | null;
 };
