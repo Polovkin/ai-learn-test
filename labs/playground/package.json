@@ -12,11 +12,14 @@
     "tsl:preview": "vite preview --config tsl-vizualization/vite.config.mts",
     "tsl:typecheck": "tsc --project tsl-vizualization/tsconfig.json"
   },
+  "dependencies": {
+    "pinia": "^3.0.4",
+    "vue": "^3.5.22"
+  },
   "devDependencies": {
-    "pug": "^3.0.4",
+    "@vitejs/plugin-vue": "^5.2.4",
     "tsx": "^4.21.0",
     "typescript": "^6.0.3",
-    "vite": "^5.4.21",
-    "vite-plugin-pug-transformer": "^1.0.8"
+    "vite": "^5.4.21"
   }
 }
