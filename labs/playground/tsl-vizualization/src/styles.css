@@ -1,0 +1,82 @@
+body {
+    font-family: system-ui, sans-serif;
+    max-width: 760px;
+    margin: 32px auto;
+    padding: 0 20px;
+}
+
+button {
+    cursor: pointer;
+    padding: 8px 12px;
+}
+
+.controls {
+    display: flex;
+    gap: 8px;
+    margin: 16px 0;
+}
+
+.dial {
+    display: block;
+    width: min(100%, 520px);
+    height: auto;
+    margin-top: 24px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background: #fafafa;
+}
+
+.dial-line {
+    stroke: #86a8ff;
+    stroke-width: 2;
+    stroke-linecap: round;
+    opacity: 0.7;
+}
+
+.dial-point {
+    fill: #fff;
+    stroke: #333;
+    stroke-width: 1.5;
+}
+
+.dial-point.visited {
+    fill: #d9e6ff;
+    stroke: #2f66d0;
+}
+
+.dial-point.current {
+    fill: #2f66d0;
+    stroke: #173a82;
+}
+
+.dial-label {
+    font-size: 12px;
+    text-anchor: middle;
+    dominant-baseline: middle;
+    pointer-events: none;
+}
+
+.dial-label.current {
+    fill: #fff;
+    font-weight: 700;
+}
+
+.history {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 0;
+    list-style: none;
+}
+
+.history li {
+    padding: 4px 8px;
+    border: 1px solid #cbd6ef;
+    border-radius: 999px;
+    background: #f4f7ff;
+}
+
+.cycle {
+    color: #2f66d0;
+    font-weight: 700;
+}
