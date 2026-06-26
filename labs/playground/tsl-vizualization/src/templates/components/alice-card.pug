@@ -1,0 +1,35 @@
+article.party-card.party-card-alice
+  header.party-header
+    div
+      p.party-label Аліса
+      h2 Секрет: 6 кроків
+    strong#aliceSharedKey.key-chip ?
+
+  .phase
+    h3 1. Публічний крик
+    p
+      | Секретні кроки у демо:
+      strong#alicePublicSteps 0
+      |  / 6
+    p
+      | Публічне число:
+      strong#alicePublicPosition 1
+    p#alicePublicFormula.formula Стартує з 1
+    button#alicePublicButton(type="button") Крок Аліси
+
+  .phase
+    h3 2. Обчислює спільний ключ
+    p
+      | Вхід від Колі:
+      strong 19
+    p
+      | Секретний лічильник:
+      strong#aliceSharedSteps 0
+      |  / 6
+    p
+      | Спільний секрет:
+      strong#aliceSharedPosition -
+    p#aliceSharedFormula.formula Чекає, поки Коля скаже 19
+    button#aliceSharedButton(type="button" disabled) Наступний крок ключа
+
+  ol#aliceHistory.history-list(aria-label="Історія Аліси")

@@ -1,13 +1,28 @@
 import { getDomElements } from "./dom";
 import { renderApp } from "./render";
-import { createInitialState, stepState } from "./state";
+import { createInitialState, stepParty } from "./state";
 
 export function startApp(): void {
     const elements = getDomElements();
     let state = createInitialState();
 
-    elements.nextButton.addEventListener("click", () => {
-        state = stepState(state);
+    elements.alice.publicButton.addEventListener("click", () => {
+        state = stepParty(state, "alice", "public");
+        renderApp(elements, state);
+    });
+
+    elements.alice.sharedButton.addEventListener("click", () => {
+        state = stepParty(state, "alice", "shared");
+        renderApp(elements, state);
+    });
+
+    elements.bob.publicButton.addEventListener("click", () => {
+        state = stepParty(state, "bob", "public");
+        renderApp(elements, state);
+    });
+
+    elements.bob.sharedButton.addEventListener("click", () => {
+        state = stepParty(state, "bob", "shared");
         renderApp(elements, state);
     });
 

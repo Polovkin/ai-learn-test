@@ -1,8 +1,8 @@
 import { dialConfig, modulus, multiplier } from "./constants";
 import type { Point } from "./types";
 
-export function getNextPosition(current: number): number {
-    return (current * multiplier) % modulus;
+export function getNextPosition(current: number, factor = multiplier): number {
+    return (current * factor) % modulus;
 }
 
 export function getDialPoint(value: number): Point {

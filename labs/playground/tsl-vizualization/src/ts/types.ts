@@ -3,20 +3,49 @@ export type Point = {
     y: number;
 };
 
-export type TslState = {
-    current: number;
-    steps: number;
+export type PartyId = "alice" | "bob";
+
+export type Phase = "public" | "shared";
+
+export type PartyState = {
+    publicPosition: number;
+    publicSteps: number;
+    publicHistory: number[];
+    publicFormula: string;
+    sharedPosition: number | null;
+    sharedSteps: number;
+    sharedHistory: number[];
+    sharedFormula: string;
+};
+
+export type DhState = {
+    parties: Record<PartyId, PartyState>;
+};
+
+export type PartyDomElements = {
+    publicSteps: HTMLElement;
+    publicPosition: HTMLElement;
+    publicFormula: HTMLElement;
+    publicButton: HTMLButtonElement;
+    sharedSteps: HTMLElement;
+    sharedPosition: HTMLElement;
+    sharedFormula: HTMLElement;
+    sharedButton: HTMLButtonElement;
+    sharedKey: HTMLElement;
+    history: HTMLOListElement;
+};
+
+export type DialTrace = {
+    id: string;
+    party: PartyId;
+    phase: Phase;
     history: number[];
-    calculation: string;
 };
 
 export type DomElements = {
-    current: HTMLElement;
-    steps: HTMLElement;
-    calculation: HTMLElement;
-    cycleStatus: HTMLElement;
-    history: HTMLOListElement;
     dial: SVGSVGElement;
-    nextButton: HTMLButtonElement;
+    sharedStatus: HTMLElement;
+    alice: PartyDomElements;
+    bob: PartyDomElements;
     resetButton: HTMLButtonElement;
 };
