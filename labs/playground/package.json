@@ -10,13 +10,25 @@
     "tsl:dev": "vite --config tsl-vizualization/vite.config.mts",
     "tsl:build": "vite build --config tsl-vizualization/vite.config.mts",
     "tsl:preview": "vite preview --config tsl-vizualization/vite.config.mts",
-    "tsl:typecheck": "tsc --project tsl-vizualization/tsconfig.json"
+    "tsl:typecheck": "tsc --project tsl-vizualization/tsconfig.json",
+    "svg:dev": "vite svg-example",
+    "svg:build": "vite build svg-example",
+    "svg:preview": "vite preview svg-example",
+    "svg:typecheck": "tsc --project svg-example/tsconfig.json",
+    "react:dev": "vite react-hello-world",
+    "react:build": "vite build react-hello-world",
+    "react:preview": "vite preview react-hello-world",
+    "react:typecheck": "tsc --project react-hello-world/tsconfig.json"
   },
   "dependencies": {
     "pinia": "^3.0.4",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1",
     "vue": "^3.5.22"
   },
   "devDependencies": {
+    "@types/react": "^19.1.12",
+    "@types/react-dom": "^19.1.9",
     "@vitejs/plugin-vue": "^5.2.4",
     "tsx": "^4.21.0",
     "typescript": "^6.0.3",
