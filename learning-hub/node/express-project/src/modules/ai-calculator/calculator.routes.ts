@@ -3,6 +3,6 @@ import { postCalculatorController } from './calculator.controller.js'
 
 const router = Router()
 
-router.post('/api/ai/calculator', postCalculatorController)
+router.post('/', postCalculatorController)
 
 export default router

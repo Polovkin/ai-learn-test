@@ -4,7 +4,7 @@ import { type RetrievedChunk, type StoredChunkInput } from './rag.types.js'
 
 const { Pool } = pg
 
-const connectionString = process.env.DATABASE_URL
+const connectionString = process.env.RAG_DATABASE_URL
 
 export const ragPool = new Pool({
   connectionString,

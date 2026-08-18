@@ -1,16 +1,24 @@
 import { Router } from 'express'
 import { createEmbedding, makeRequest } from '../openAiClient.js'
 import { buildAssembledPrompt } from '../promptAssembly.js'
+import authRouter from '../modules/auth/auth.routes.js'
+import learningRouter from '../modules/learning/learning.routes.js'
+import protectedRouter from '../modules/protected/protected.routes.js'
+import walletRouter from '../modules/wallet/wallet.routes.js'
 import ragRouter from '../modules/rag/rag.routes.js'
 import calculatorRouter from '../modules/ai-calculator/calculator.routes.js'
 
 const router = Router()
 
-router.use(ragRouter)
-router.use(calculatorRouter)
+router.use('/auth', authRouter)
+router.use('/', protectedRouter)
+router.use('/wallet', walletRouter)
+router.use('/api/learning', learningRouter)
+router.use('/api/rag', ragRouter)
+router.use('/api/ai/calculator', calculatorRouter)
 
 router.get('/api/health', (_req, res) => {
-  res.json({ service: 'llm-visualizer-api', status: 'ok' })
+  res.json({ service: 'express-project', status: 'ok' })
 })
 
 router.post('/api/prompt-assembly', async (req, res) => {
@@ -57,7 +65,7 @@ router.post('/api/embeddings', async (req, res) => {
 
 router.get('/', (_req, res) => {
   res.json({
-    service: 'llm-visualizer-api',
+    service: 'express-project',
     status: 'ok',
     ui: 'Run @web/learning-hub and open #/api-status',
   })

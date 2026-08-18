@@ -13,9 +13,9 @@ const upload = multer({ storage: multer.memoryStorage() })
 // @types/multer currently resolves Express 4 request types while this API uses Express 5.
 const uploadSinglePdf = upload.single('file') as unknown as RequestHandler
 
-router.post('/api/rag/documents', uploadSinglePdf, uploadDocumentController)
-router.get('/api/rag/documents/latest', getLatestDocumentController)
-router.post('/api/rag/ask', askQuestionController)
-router.post('/api/rag/clear', clearRagController)
+router.post('/documents', uploadSinglePdf, uploadDocumentController)
+router.get('/documents/latest', getLatestDocumentController)
+router.post('/ask', askQuestionController)
+router.post('/clear', clearRagController)
 
 export default router
