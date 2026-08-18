@@ -6,7 +6,7 @@
       "type": "shell",
       "command": "source ~/.nvm/nvm.sh && nvm use 22.16.0 && npm run dev",
       "options": {
-        "cwd": "${workspaceFolder}/apps/llm-visualizer-web",
+        "cwd": "${workspaceFolder}/web/learning-hub",
         "shell": {
           "executable": "/bin/zsh",
           "args": ["-lc"]
@@ -19,7 +19,7 @@
       "type": "shell",
       "command": "source ~/.nvm/nvm.sh && nvm use 22.16.0 && npm run build",
       "options": {
-        "cwd": "${workspaceFolder}/apps/llm-visualizer-web",
+        "cwd": "${workspaceFolder}/web/learning-hub",
         "shell": {
           "executable": "/bin/zsh",
           "args": ["-lc"]
@@ -32,7 +32,7 @@
       "type": "shell",
       "command": "set -a && source ../../.env && set +a && source ~/.nvm/nvm.sh && nvm use 22.16.0 && npm run dev",
       "options": {
-        "cwd": "${workspaceFolder}/apps/llm-visualizer-api",
+        "cwd": "${workspaceFolder}/node/llm-visualizer-api",
         "shell": {
           "executable": "/bin/zsh",
           "args": ["-lc"]
@@ -45,7 +45,7 @@
       "type": "shell",
       "command": "set -a && source ../../.env && set +a && source ~/.nvm/nvm.sh && nvm use 22.16.0 && npm run build",
       "options": {
-        "cwd": "${workspaceFolder}/apps/llm-visualizer-api",
+        "cwd": "${workspaceFolder}/node/llm-visualizer-api",
         "shell": {
           "executable": "/bin/zsh",
           "args": ["-lc"]

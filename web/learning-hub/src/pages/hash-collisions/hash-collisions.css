@@ -1,0 +1,12 @@
+.hash-page { width: min(960px, calc(100% - 32px)); margin: 0 auto; padding: 32px 0; text-align: left; }
+.hash-page h1 { font-size: clamp(34px, 5vw, 56px); }
+.hash-intro, .hash-explain, .hash-steps { border: 1px solid var(--border); border-radius: 8px; padding: 14px; background: var(--social-bg); }
+.hash-controls, .hash-examples { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0; }
+.hash-controls input { min-width: 220px; flex: 1; border: 1px solid var(--border); border-radius: 6px; padding: 10px; color: var(--text-h); background: var(--bg); }
+.hash-page button { border: 1px solid var(--accent-border); border-radius: 6px; padding: 9px 12px; color: var(--text-h); background: var(--accent-bg); cursor: pointer; }
+.hash-buckets { display: grid; grid-template-columns: repeat(auto-fit, minmax(145px, 1fr)); gap: 12px; margin: 18px 0; }
+.hash-bucket { min-height: 120px; border: 2px solid var(--border); border-radius: 8px; padding: 12px; background: var(--bg); }
+.hash-bucket.active { border-color: #2a6df4; }
+.hash-bucket.collision { border-color: #d7263d; box-shadow: 0 0 0 3px rgba(215, 38, 61, .12); }
+.hash-bucket ul { padding-left: 20px; }
+.hash-steps { padding-left: 36px; }

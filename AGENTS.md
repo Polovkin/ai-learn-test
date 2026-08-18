@@ -1,51 +1,35 @@
 # AGENTS.md
 
 ## Purpose
-This is a learning monorepo for LLM, JS/TS, SQL, and Node.js.
-Primary goal: keep learning artifacts structured and easy to evolve.
+This is a learning monorepo for LLM, browser UI, JS/TS, SQL, and Node.js.
+Keep runnable artifacts grouped by runtime and keep all browser demos inside one React application.
 
 ## Structure
-- `apps/` long-form learning apps (multi-module, frontend/backend integration)
-- `labs/` focused experiments and visual demos
-- `packages/` shared code used by 2+ places
-- `knowledge-base/` markdown notes, terms, maps, journal
-- `docs/` shared process/reference docs
-- `tools/` helper scripts
-- `inbox/` temporary unsorted files
+- `web/learning-hub/` is the only browser application; every visual project or lab is a React page.
+- `node/` contains Node.js servers, MCP experiments, CLIs, and runtime playgrounds.
+- `other/knowledge-base/` contains notes, terms, maps, and journal entries.
+- `other/sql/` contains SQL and database-support files.
+- `other/docs/` contains non-Markdown reference artifacts.
+- `other/inbox/` contains temporary unsorted learning material.
 
 ## Placement Rules
-1. Concept demo or isolated runnable code -> `labs/`
-2. Product-like multi-page/module work -> `apps/`
-3. Reused code (2+ consumers) -> `packages/`
-4. Markdown knowledge content -> `knowledge-base/`
-5. Fast unstructured capture -> `inbox/`
+1. Browser, React, Vue, or static HTML demo -> a route under `web/learning-hub/src/pages/`.
+2. Node.js server, CLI, or runtime experiment -> `node/`.
+3. Notes, SQL, PDFs, Docker-only support, or other material -> the matching directory under `other/`.
+4. Shared browser code -> `web/learning-hub/src/components/` or `src/services/` after a second consumer exists.
+5. Do not create README or standalone prompt-document files.
 
-## Naming
-- Labs: `labs/<topic>/<YYYY-MM-DD>-<slug>`
-- Notes: `knowledge-base/notes/<topic>/<slug>.md`
-- Terms: `knowledge-base/terms/<term>.md`
-- Maps: `knowledge-base/maps/<topic>.md`
-- Journal: `knowledge-base/journal/YYYY-MM-DD-<slug>.md`
+## Web Rules
+- Keep one Vite/React entrypoint and register every page in `web/learning-hub/src/App.tsx`.
+- Preserve page-specific behavior during framework conversions.
+- Scope page styles with a page-level class to avoid cross-page CSS collisions.
+- Keep API URLs behind Vite proxies or environment variables.
 
-## Inbox Triage (Mandatory)
-When asked to organize `inbox/`, agent must:
-1. Scan all files recursively.
-2. Move markdown notes/terms/journal entries to `knowledge-base`.
-3. Move runnable code to `labs`.
-4. Move reusable code to `packages`.
-5. Move process docs/templates to `docs`.
-6. Keep ambiguous files in `inbox/pending/` with short reason.
-7. Update relevant map files in `knowledge-base/maps/`.
-8. Report exact move summary (`from -> to`) and unresolved files.
-
-## Minimum Quality Rules
-- New lab should include `README.md` with `Goal`, `Run`, `Result`, `What I Learned`, `Next`.
-- New note/term should link to related materials via topic maps.
-- Do not change business behavior during structural refactors unless requested.
-- Do not modify unrelated files.
+## Inbox Triage
+When organizing `other/inbox/`, scan it recursively and move each item to the appropriate `web/`, `node/`, or `other/` destination. Update topic maps under `other/knowledge-base/maps/` and report unresolved files.
 
 ## Validation
-Run from repo root when relevant:
+Run from the repository root when relevant:
 - `npm run typecheck`
 - `npm run build`
 - `npm run lint`

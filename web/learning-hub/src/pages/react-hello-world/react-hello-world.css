@@ -1,0 +1,5 @@
+.react-state-page { width: min(720px, calc(100% - 32px)); margin: 40px auto; border-radius: 18px; padding: 64px 24px; text-align: center; transition: background .2s ease, color .2s ease; }
+.react-state-page.dark { color: #f8fafc; background: #0f172a; }
+.react-state-page.light { color: #172033; background: #e0f2fe; }
+.react-state-page h1 { color: #61dafb; font-size: clamp(48px, 10vw, 96px); }
+.react-state-page button { margin: 6px; border: 1px solid currentColor; border-radius: 6px; padding: 10px 14px; color: inherit; background: transparent; cursor: pointer; }

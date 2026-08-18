@@ -1,0 +1,16 @@
+{
+  "name": "@node/playground",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tsx js-core/index.ts",
+    "start": "node js-core/index.js",
+    "typecheck": "tsc --noEmit -p js-core/tsconfig.json"
+  },
+  "devDependencies": {
+    "@types/node": "^25.9.2",
+    "tsx": "^4.22.4",
+    "typescript": "^6.0.3"
+  }
+}

@@ -1,0 +1,7 @@
+.event-loop-page { width: min(760px, calc(100% - 32px)); margin: 0 auto; padding: 48px 0; text-align: left; }
+.event-loop-page h1 { font-size: clamp(36px, 7vw, 64px); }
+.event-loop-page pre { overflow-x: auto; border: 1px solid var(--border); border-radius: 8px; padding: 18px; background: var(--code-bg); }
+.event-loop-page code { display: block; padding: 0; background: transparent; white-space: pre; }
+.event-loop-page button { border: 0; border-radius: 6px; padding: 12px 18px; color: white; background: #7c3aed; font-weight: 800; cursor: pointer; }
+.event-output { display: flex; gap: 10px; margin-top: 20px; }
+.event-output span { display: grid; width: 48px; height: 48px; place-items: center; border: 1px solid var(--accent-border); border-radius: 50%; color: var(--text-h); background: var(--accent-bg); font: 800 18px var(--mono); }

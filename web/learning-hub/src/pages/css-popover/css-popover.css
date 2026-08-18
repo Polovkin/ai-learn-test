@@ -1,0 +1,14 @@
+.popover-demo { min-height: 560px; color: #172033; background: #f6f8fb; text-align: left; }
+.popover-header { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 20px clamp(16px, 5vw, 56px); border-bottom: 1px solid #dde3ed; background: #fff; }
+.popover-desktop-nav { display: flex; gap: 20px; }
+.popover-demo a { color: #4d5a70; text-decoration: none; }
+.popover-demo a:hover { color: #0f8f72; }
+.popover-button { display: none; width: 44px; height: 44px; border: 1px solid #c9d2df; border-radius: 8px; padding: 10px; background: #fff; cursor: pointer; }
+.popover-button span { display: block; height: 2px; margin: 5px 0; background: #172033; }
+.popover-mobile-nav { width: min(280px, calc(100vw - 32px)); height: 100dvh; margin: 0 0 0 auto; border: 1px solid #dde3ed; padding: 12px; background: #fff; }
+.popover-mobile-nav::backdrop { background: rgba(23, 32, 51, .28); }
+.popover-mobile-nav a { display: block; border-radius: 6px; padding: 14px 12px; }
+.popover-copy { width: min(760px, calc(100% - 32px)); margin: 0 auto; padding: 64px 0; }
+.popover-copy h1 { margin: 0 0 12px; color: #172033; font-size: clamp(32px, 6vw, 64px); line-height: 1; }
+.popover-copy p { color: #657084; line-height: 1.6; }
+@media (max-width: 640px) { .popover-desktop-nav { display: none; } .popover-button { display: block; } }

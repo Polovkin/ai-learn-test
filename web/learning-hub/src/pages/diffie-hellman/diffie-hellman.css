@@ -1,0 +1,38 @@
+.dh-page { width: min(1080px, calc(100% - 32px)); margin: 0 auto; padding: 36px 0; color: #4b587c; text-align: left; }
+.dh-page h1 { margin: 8px 0 14px; color: #172033; font-size: clamp(38px, 6vw, 64px); line-height: 1; }
+.dh-page h2, .dh-page h3 { color: #172033; }
+.dh-lead { max-width: 760px; font-size: 18px; line-height: 1.55; }
+.dh-rules { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 24px 0; }
+.dh-rules span { border: 1px solid #dde3f2; border-radius: 8px; padding: 14px; color: #172033; background: #fff; font-size: 26px; font-weight: 900; }
+.dh-rules small { display: block; color: #667394; font-size: 12px; text-transform: uppercase; }
+.dh-grid { display: grid; grid-template-columns: minmax(360px, 500px) 1fr; align-items: start; gap: 18px; }
+.dh-dial-panel, .dh-party, .dh-attacker, .dh-result { border: 1px solid #dde3f2; border-radius: 8px; background: rgba(255,255,255,.94); box-shadow: 0 18px 50px rgba(40,52,91,.08); }
+.dh-dial-panel { position: sticky; top: 150px; padding: 18px; }
+.dh-dial-panel > svg { width: 100%; height: auto; border: 1px solid #e1e6f3; border-radius: 8px; background: #fbfcff; }
+.dh-line { stroke-width: 4; stroke-linecap: round; }
+.dh-line.alice { stroke: #c1121f; } .dh-line.bob { stroke: #005bbb; } .dh-line.shared { stroke: #007a35; stroke-dasharray: 7 8; }
+.dh-point { fill: #fff; stroke: #37415f; stroke-width: 1.5; } .dh-point.visited { fill: #eef3ff; } .dh-point.alice { fill: #ffe8ea; stroke: #d64550; } .dh-point.bob { fill: #e6f0ff; stroke: #2364aa; } .dh-point.key { fill: #dff8eb; stroke: #1f8a55; stroke-width: 3; }
+.dh-label { dominant-baseline: middle; text-anchor: middle; fill: #172033; font-size: 12px; font-weight: 800; }
+.dh-parties { display: grid; gap: 16px; }
+.dh-party { overflow: hidden; }
+.dh-party > header { display: flex; justify-content: space-between; gap: 12px; padding: 16px; background: #f7f9fe; }
+.dh-party-alice > header { background: #fff1f2; } .dh-party-bob > header { background: #edf5ff; }
+.dh-party label { display: grid; gap: 6px; color: #172033; font-weight: 900; }
+.dh-party input { width: 110px; border: 1px solid #cad3e5; border-radius: 6px; padding: 8px; font: inherit; }
+.dh-key { display: grid; min-width: 48px; height: 48px; place-items: center; border-radius: 999px; color: white; background: #172033; font-size: 22px; }
+.dh-party > section { border-top: 1px solid #e6ebf5; padding: 14px 16px; }
+.dh-party h3 { margin: 0 0 10px; }
+.dh-party code { display: block; min-height: 42px; margin: 10px 0; white-space: normal; }
+.dh-page button { border: 1px solid #cad3e5; border-radius: 6px; padding: 9px 12px; color: #172033; background: #f7f9fe; font-weight: 800; cursor: pointer; }
+.dh-page button:disabled { cursor: not-allowed; opacity: .55; }
+.dh-history { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0 16px 16px; list-style: none; }
+.dh-history li { border: 1px solid #dfe5f2; border-radius: 999px; padding: 5px 8px; background: #f5f7fc; font-size: 12px; }
+.dh-attacker { display: grid; gap: 12px; margin-top: 18px; padding: 18px; }
+.dh-observed { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+.dh-observed div { border: 1px solid #ead58f; border-radius: 8px; padding: 12px; background: #fff9e6; }
+.dh-observed span, .dh-observed strong { display: block; } .dh-observed strong { color: #172033; font-size: 28px; }
+.dh-attacker-results { border-top: 1px solid #e6ebf5; padding-top: 12px; }
+.dh-result { display: flex; align-items: center; justify-content: space-between; gap: 14px; margin-top: 18px; padding: 16px 18px; }
+.dh-result.success p { color: #1f8a55; font-weight: 800; }
+@media (max-width: 900px) { .dh-grid { grid-template-columns: 1fr; } .dh-dial-panel { position: static; } }
+@media (max-width: 620px) { .dh-rules, .dh-observed { grid-template-columns: 1fr; } .dh-result { align-items: stretch; flex-direction: column; } }

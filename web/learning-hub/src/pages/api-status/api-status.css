@@ -1,0 +1,6 @@
+.api-status-page { display: grid; width: min(720px, calc(100% - 32px)); margin: 0 auto; padding: 64px 0; justify-items: start; gap: 14px; text-align: left; }
+.api-status-page h1 { margin: 0; font-size: clamp(36px, 7vw, 64px); }
+.api-status-page button { border: 0; border-radius: 6px; padding: 12px 18px; color: white; background: #7c3aed; font-weight: 800; cursor: pointer; }
+.api-status-page output { width: 100%; border: 1px solid var(--border); border-radius: 8px; padding: 16px; background: var(--social-bg); }
+.api-status-page output.success { border-color: #16a34a; color: #15803d; }
+.api-status-page output.error { border-color: #dc2626; color: #b91c1c; }

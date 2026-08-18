@@ -3,14 +3,15 @@
   "private": true,
   "version": "1.0.0",
   "workspaces": [
-    "apps/*",
-    "packages/*",
-    "labs/playground"
+    "web/*",
+    "node/*"
   ],
   "scripts": {
     "dev": "npm run dev:web",
-    "dev:web": "npm run dev -w apps/llm-visualizer-web",
-    "dev:api": "npm run dev -w apps/llm-visualizer-api",
+    "dev:web": "npm run dev -w @web/learning-hub",
+    "dev:llm-api": "npm run dev -w @node/llm-visualizer-api",
+    "dev:auth-api": "npm run start:dev -w @node/authorization-api",
+    "dev:mcp": "npm run dev -w @node/lmstudio-mcp-learning",
     "build": "npm run build --workspaces --if-present",
     "test": "npm run test --workspaces --if-present",
     "lint": "npm run lint --workspaces --if-present",
