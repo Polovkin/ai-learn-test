@@ -5,7 +5,7 @@
       "name": "Express API (tsx debug)",
       "type": "node",
       "request": "launch",
-      "cwd": "${workspaceFolder}/node/llm-visualizer-api",
+      "cwd": "${workspaceFolder}/learning-hub/node/llm-visualizer-api",
       "runtimeExecutable": "node",
       "runtimeArgs": [
         "--import",
@@ -20,7 +20,7 @@
       "name": "Vite Dev Server",
       "type": "node-terminal",
       "request": "launch",
-      "cwd": "${workspaceFolder}/web/learning-hub",
+      "cwd": "${workspaceFolder}/learning-hub/web",
       "command": "npm run dev"
     },
     {
@@ -28,13 +28,13 @@
       "type": "pwa-chrome",
       "request": "launch",
       "url": "http://localhost:5173",
-      "webRoot": "${workspaceFolder}/web/learning-hub/src"
+      "webRoot": "${workspaceFolder}/learning-hub/web/src"
     },
     {
       "name": "Playground JS Core",
       "type": "node",
       "request": "launch",
-      "program": "${workspaceFolder}/node/playground/js-core/index.js",
+      "program": "${workspaceFolder}/learning-hub/node/playground/js-core/index.js",
       "cwd": "${workspaceFolder}",
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",
@@ -46,7 +46,7 @@
       "request": "launch",
       "runtimeExecutable": "npx",
       "runtimeArgs": ["tsx", "js-core/index.ts"],
-      "cwd": "${workspaceFolder}/node/playground",
+      "cwd": "${workspaceFolder}/learning-hub/node/playground",
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",
       "skipFiles": ["<node_internals>/**"]
@@ -55,14 +55,14 @@
       "name": "JWT Learning Backend (Nest)",
       "type": "node-terminal",
       "request": "launch",
-      "cwd": "${workspaceFolder}/node/authorization-api",
+      "cwd": "${workspaceFolder}/learning-hub/node/authorization-api",
       "command": "npm run start:dev"
     },
     {
       "name": "Learning Hub Frontend (Vite)",
       "type": "node-terminal",
       "request": "launch",
-      "cwd": "${workspaceFolder}/web/learning-hub",
+      "cwd": "${workspaceFolder}/learning-hub/web",
       "command": "npm run dev"
     }
   ],
