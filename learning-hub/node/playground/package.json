@@ -4,9 +4,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "tsx js-core/index.ts",
-    "start": "node js-core/index.js",
-    "typecheck": "tsc --noEmit -p js-core/tsconfig.json"
+    "dev": "tsx ../../web/js/index.ts",
+    "start": "node ../../web/js/index.js",
+    "typecheck": "tsc --noEmit -p ../../web/js/tsconfig.json"
   },
   "devDependencies": {
     "@types/node": "^25.9.2",
